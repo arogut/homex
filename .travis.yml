@@ -1,6 +1,5 @@
 language: java
 jdk:
-  - oracjeljdk8
-  - openjdk8
+  - oraclejdk8
 sudo: false
 script: mvn clean verify
