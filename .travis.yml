@@ -1,0 +1,6 @@
+language: java
+jdk:
+  - oracjeljdk8
+  - openjdk8
+sudo: false
+script: mvn clean verify
