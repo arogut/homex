@@ -37,6 +37,7 @@
 				<version>0.7.7.201606060606</version>
 				<executions>
 					<execution>
+                        <id>prepare-agent-ut</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
@@ -48,9 +49,15 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
+                    <execution>
+                        <id>prepare-agent-it</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
 					<execution>
 						<id>it-report</id>
-						<phase>integration-test</phase>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>report-integration</goal>
 						</goals>
