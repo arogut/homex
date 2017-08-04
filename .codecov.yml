@@ -1,0 +1,15 @@
+coverage:
+  status:
+    project:
+      ShasCore:
+        paths:
+          - "ShasCore/"
+        target: 85%
+      ShasEdge:
+        paths:
+          - "ShasEdge/"
+        target: 85%
+      ShasUI:
+        paths:
+          - "ShasUI/"
+        target: 85%
