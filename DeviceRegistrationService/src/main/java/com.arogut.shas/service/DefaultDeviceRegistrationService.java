@@ -40,6 +40,6 @@ public class DefaultDeviceRegistrationService implements DeviceRegistrationServi
 
         deviceRepository.save(newDevice);
 
-        return Optional.of(uuid);
+        return Optional.ofNullable(uuid);
     }
 }
