@@ -1,8 +1,8 @@
 package com.arogut.shas.repository;
 
-import com.arogut.shas.model.Device;
+import com.arogut.shas.model.jpa.Device;
 import com.arogut.shas.model.DeviceBuilder;
-import com.arogut.shas.model.SourceDevice;
+import com.arogut.shas.model.jpa.SourceDevice;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class DeviceRepositoryIT {
     public void repositoryShouldContainAddedDevice() {
         String host = "hohohost";
         Instant lastConnection = Instant.now();
-        Device sourceDevice = new DeviceBuilder<>(new SourceDevice())
+        SourceDevice sourceDevice = new DeviceBuilder<>(new SourceDevice())
                 .withId("test")
                 .withHost(host)
                 .withLastConnection(lastConnection)

@@ -1,6 +1,6 @@
 package com.arogut.shas.service;
 
-import com.arogut.shas.model.Device;
+import com.arogut.shas.model.jpa.Device;
 import com.arogut.shas.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

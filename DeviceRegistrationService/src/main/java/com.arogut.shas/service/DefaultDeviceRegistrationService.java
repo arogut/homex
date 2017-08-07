@@ -2,7 +2,7 @@ package com.arogut.shas.service;
 
 import com.arogut.shas.model.DeviceType;
 import com.arogut.shas.model.RegisterMessage;
-import com.arogut.shas.model.SourceDevice;
+import com.arogut.shas.model.jpa.SourceDevice;
 import com.arogut.shas.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,12 +33,13 @@ public class DefaultDeviceRegistrationService implements DeviceRegistrationServi
 
         SourceDevice newDevice = new SourceDevice();
         newDevice.setId(uuid);
+        newDevice.setName(message.getDeviceName());
         newDevice.setConnected(true);
         newDevice.setLastConnection(message.getTimestamp());
         newDevice.setHost(message.getHost());
 
         deviceRepository.save(newDevice);
 
-        return Optional.ofNullable(uuid);
+        return Optional.of(uuid);
     }
 }

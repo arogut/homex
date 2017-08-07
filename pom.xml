@@ -11,7 +11,8 @@
 		<module>ShasEdge</module>
 		<module>ShasUI</module>
 		<module>DeviceRegistrationService</module>
-    </modules>
+		<module>ShasModel</module>
+	</modules>
     <packaging>pom</packaging>
 
 	<name>Shas</name>

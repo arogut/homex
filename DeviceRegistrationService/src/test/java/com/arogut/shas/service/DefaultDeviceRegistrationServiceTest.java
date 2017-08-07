@@ -1,6 +1,7 @@
 package com.arogut.shas.service;
 
 import com.arogut.shas.model.*;
+import com.arogut.shas.model.jpa.SourceDevice;
 import com.arogut.shas.repository.DeviceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,8 +1,8 @@
 package com.arogut.shas.rest;
 
-import com.arogut.shas.model.Device;
+import com.arogut.shas.model.jpa.Device;
 import com.arogut.shas.model.DeviceBuilder;
-import com.arogut.shas.model.SourceDevice;
+import com.arogut.shas.model.jpa.SourceDevice;
 import com.arogut.shas.service.DefaultDeviceProviderService;
 import org.junit.Before;
 import org.junit.Test;
