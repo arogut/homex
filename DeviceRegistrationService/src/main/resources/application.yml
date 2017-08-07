@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/shas"
+    username: postgres
+    password: admin
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+  jackson:
+    serialization:
+      indent_output: true

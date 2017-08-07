@@ -10,7 +10,8 @@
         <module>ShasCore</module>
 		<module>ShasEdge</module>
 		<module>ShasUI</module>
-	</modules>
+		<module>DeviceRegistrationService</module>
+    </modules>
     <packaging>pom</packaging>
 
 	<name>Shas</name>
