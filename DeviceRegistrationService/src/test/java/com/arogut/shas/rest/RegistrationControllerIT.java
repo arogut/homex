@@ -1,8 +1,8 @@
 package com.arogut.shas.rest;
 
 import com.arogut.shas.model.DeviceType;
-import com.arogut.shas.model.RegisterMessage;
 import com.arogut.shas.model.RegisterMessageBuilder;
+import com.arogut.shas.model.RegisterMessage;
 import com.arogut.shas.service.DefaultDeviceRegistrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;

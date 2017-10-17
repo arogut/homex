@@ -1,7 +1,7 @@
 package com.arogut.shas.rest;
 
-import com.arogut.shas.model.RegisterMessage;
 import com.arogut.shas.model.RegisterSuccessfulMessage;
+import com.arogut.shas.model.RegisterMessage;
 import com.arogut.shas.service.DeviceRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

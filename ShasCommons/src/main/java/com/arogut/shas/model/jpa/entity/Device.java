@@ -1,4 +1,4 @@
-package com.arogut.shas.model;
+package com.arogut.shas.model.jpa.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +17,8 @@ public abstract class Device {
     @Id
     @NotEmpty
     private String id;
+    @Column
+    private String name;
     @Column
     private boolean isConnected;
     @Column

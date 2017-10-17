@@ -1,6 +1,6 @@
-package com.arogut.shas.repository;
+package com.arogut.shas.model.jpa.repository;
 
-import com.arogut.shas.model.jpa.Device;
+import com.arogut.shas.model.jpa.entity.Device;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

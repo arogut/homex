@@ -1,8 +1,9 @@
 package com.arogut.shas.repository;
 
-import com.arogut.shas.model.jpa.Device;
 import com.arogut.shas.model.DeviceBuilder;
-import com.arogut.shas.model.jpa.SourceDevice;
+import com.arogut.shas.model.jpa.entity.Device;
+import com.arogut.shas.model.jpa.entity.SourceDevice;
+import com.arogut.shas.model.jpa.repository.DeviceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.arogut.shas.rest;
 
-import com.arogut.shas.model.jpa.Device;
+import com.arogut.shas.model.jpa.entity.Device;
 import com.arogut.shas.service.DeviceProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

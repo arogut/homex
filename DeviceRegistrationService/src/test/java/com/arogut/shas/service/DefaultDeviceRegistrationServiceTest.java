@@ -1,8 +1,11 @@
 package com.arogut.shas.service;
 
-import com.arogut.shas.model.*;
-import com.arogut.shas.model.jpa.SourceDevice;
-import com.arogut.shas.repository.DeviceRepository;
+import com.arogut.shas.model.DeviceBuilder;
+import com.arogut.shas.model.DeviceType;
+import com.arogut.shas.model.RegisterMessage;
+import com.arogut.shas.model.RegisterMessageBuilder;
+import com.arogut.shas.model.jpa.entity.SourceDevice;
+import com.arogut.shas.model.jpa.repository.DeviceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

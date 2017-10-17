@@ -1,4 +1,4 @@
-package com.arogut.shas.model.jpa;
+package com.arogut.shas.model.jpa.entity;
 
 import lombok.Getter;
 import lombok.Setter;

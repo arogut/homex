@@ -1,6 +1,6 @@
 package com.arogut.shas.service;
 
-import com.arogut.shas.model.jpa.Device;
+import com.arogut.shas.model.jpa.entity.Device;
 
 import java.util.Optional;
 

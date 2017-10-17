@@ -12,7 +12,7 @@
 		<module>ShasEdge</module>
 		<module>ShasUI</module>
 		<module>DeviceRegistrationService</module>
-		<module>ShasModel</module>
+		<module>ShasCommons</module>
 	</modules>
     <packaging>pom</packaging>
 
