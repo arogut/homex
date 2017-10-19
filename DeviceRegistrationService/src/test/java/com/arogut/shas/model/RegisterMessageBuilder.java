@@ -17,11 +17,6 @@ public class RegisterMessageBuilder {
         return this;
     }
 
-    public RegisterMessageBuilder withTimestamp(Instant timestamp) {
-        message.setTimestamp(timestamp);
-        return this;
-    }
-
     public RegisterMessageBuilder withHost(String host) {
         message.setHost(host);
         return this;

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/register")
 public class RegistrationController {
@@ -22,7 +24,7 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestBody RegisterMessage message) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterMessage message) {
         return deviceRegistrationService.register(message).map(x -> {
             RegisterSuccessfulMessage succ = RegisterSuccessfulMessage.REGISTRATION_COMPLETED;
             succ.setDeviceId(x);

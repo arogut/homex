@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ public class DefaultDeviceRegistrationService implements DeviceRegistrationServi
     }
 
     private Optional<String> persistDeviceMetadata(Device device) {
+        device.setLastConnection(Instant.now());
         Device d = deviceRepository.save(device);
 
         return Optional.ofNullable(d.getId());
@@ -42,7 +44,6 @@ public class DefaultDeviceRegistrationService implements DeviceRegistrationServi
         newDevice.setId(uuid);
         newDevice.setName(message.getDeviceName());
         newDevice.setConnected(true);
-        newDevice.setLastConnection(message.getTimestamp());
         newDevice.setHost(message.getHost());
 
         return newDevice;
