@@ -17,6 +17,11 @@ public class DeviceBuilder<T extends Device> {
         return this;
     }
 
+    public DeviceBuilder<T> withName(String name) {
+        device.setName(name);
+        return this;
+    }
+
     public DeviceBuilder<T> withIsConnected(boolean isConnected) {
         device.setConnected(isConnected);
         return this;
@@ -24,6 +29,11 @@ public class DeviceBuilder<T extends Device> {
 
     public DeviceBuilder<T> withHost(String host) {
         device.setHost(host);
+        return this;
+    }
+
+    public DeviceBuilder<T> withPost(int port) {
+        device.setPort(port);
         return this;
     }
 

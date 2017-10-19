@@ -24,5 +24,7 @@ public abstract class Device {
     @Column
     private String host;
     @Column
+    private int port;
+    @Column
     private Instant lastConnection;
 }

@@ -4,6 +4,7 @@ import com.arogut.shas.model.DeviceBuilder;
 import com.arogut.shas.model.DeviceType;
 import com.arogut.shas.model.RegisterMessage;
 import com.arogut.shas.model.RegisterMessageBuilder;
+import com.arogut.shas.model.jpa.entity.Device;
 import com.arogut.shas.model.jpa.entity.SourceDevice;
 import com.arogut.shas.model.jpa.repository.DeviceRepository;
 import org.junit.Test;
@@ -42,10 +43,24 @@ public class DefaultDeviceRegistrationServiceTest {
                 .withHost("127.0.0.1")
                 .withDeviceType(DeviceType.SOURCE)
                 .build();
-        when(deviceRepository.save(Matchers.<SourceDevice>any())).thenReturn(sourceDevice);
+        when(deviceRepository.save(Matchers.<Device>any())).thenReturn(sourceDevice);
 
         Optional<String> id = deviceRegistrationService.register(message);
 
         assertThat(id).isPresent();
+    }
+
+    @Test
+    public void shouldReturnRegisterDeniedWhenMetadataNotPersisted() {
+        SourceDevice sourceDevice = new DeviceBuilder<>(new SourceDevice())
+                .withId(null)
+                .build();
+        RegisterMessage message = new RegisterMessageBuilder()
+                .build();
+        when(deviceRepository.save(Matchers.<Device>any())).thenReturn(sourceDevice);
+
+        Optional<String> id = deviceRegistrationService.register(message);
+
+        assertThat(id).isNotPresent();
     }
 }

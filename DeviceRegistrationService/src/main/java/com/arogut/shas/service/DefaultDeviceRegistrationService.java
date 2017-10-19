@@ -1,11 +1,12 @@
 package com.arogut.shas.service;
 
-import com.arogut.shas.model.DeviceType;
+import com.arogut.shas.model.RegisterMessage;
+import com.arogut.shas.model.jpa.entity.Device;
 import com.arogut.shas.model.jpa.entity.SourceDevice;
 import com.arogut.shas.model.jpa.repository.DeviceRepository;
-import com.arogut.shas.model.RegisterMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,25 +22,27 @@ public class DefaultDeviceRegistrationService implements DeviceRegistrationServi
     }
 
     @Override
+    @Transactional
     public Optional<String> register(RegisterMessage message) {
-        if(message.getDeviceType().equals(DeviceType.SOURCE)) {
-            return registerSourceDevice(message);
-        }
-        return Optional.empty();
+        return persistDeviceMetadata(mapToDevice(message));
     }
 
-    private Optional<String> registerSourceDevice(RegisterMessage message) {
+    private Optional<String> persistDeviceMetadata(Device device) {
+        Device d = deviceRepository.save(device);
+
+        return Optional.ofNullable(d.getId());
+    }
+
+    private Device mapToDevice(RegisterMessage message) {
         String uuid = UUID.randomUUID().toString();
 
-        SourceDevice newDevice = new SourceDevice();
+        Device newDevice = new SourceDevice();
         newDevice.setId(uuid);
         newDevice.setName(message.getDeviceName());
         newDevice.setConnected(true);
         newDevice.setLastConnection(message.getTimestamp());
         newDevice.setHost(message.getHost());
 
-        deviceRepository.save(newDevice);
-
-        return Optional.ofNullable(uuid);
+        return newDevice;
     }
 }
