@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -43,6 +44,7 @@ public class RegistrationControllerIT {
                 .withDeviceName("test")
                 .withHost("127.0.0.1")
                 .withDeviceType(DeviceType.SOURCE)
+                .withFields(Collections.singletonMap("temp",1))
                 .build();
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(message);
