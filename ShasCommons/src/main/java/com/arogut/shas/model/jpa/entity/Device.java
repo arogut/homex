@@ -1,5 +1,6 @@
 package com.arogut.shas.model.jpa.entity;
 
+import com.arogut.shas.model.DeviceType;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -8,9 +9,9 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "DEVICE")
+@Table(name = "device")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "DEVICE_TYPE")
+@DiscriminatorColumn(name = "deviceType")
 @Getter
 @Setter
 public abstract class Device {
@@ -19,6 +20,8 @@ public abstract class Device {
     private String id;
     @Column
     private String name;
+    @Column(name = "deviceType",insertable = false, updatable = false)
+    private DeviceType deviceType;
     @Column
     private boolean isConnected;
     @Column

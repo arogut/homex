@@ -24,7 +24,9 @@ public class DefaultDeviceRegistrationService implements DeviceRegistrationServi
     @Override
     @Transactional
     public Optional<String> register(RegisterMessage message) {
-        return persistDeviceMetadata(mapToDevice(message));
+        return deviceRepository.findOneByHostAndDeviceType(message.getHost(),message.getDeviceType())
+                .map(x -> Optional.<String>empty())
+                .orElse(persistDeviceMetadata(mapToDevice(message)));
     }
 
     private Optional<String> persistDeviceMetadata(Device device) {

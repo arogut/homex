@@ -44,6 +44,8 @@ public class DefaultDeviceRegistrationServiceTest {
                 .withDeviceType(DeviceType.SOURCE)
                 .build();
         when(deviceRepository.save(Matchers.<Device>any())).thenReturn(sourceDevice);
+        when(deviceRepository.findOneByHostAndDeviceType(Matchers.anyString(),Matchers.any()))
+                .thenReturn(Optional.empty());
 
         Optional<String> id = deviceRegistrationService.register(message);
 
@@ -51,12 +53,14 @@ public class DefaultDeviceRegistrationServiceTest {
     }
 
     @Test
-    public void shouldReturnRegisterDeniedWhenMetadataNotPersisted() {
+    public void shouldReturnRegisterDeviceWithSameHostAndType() {
         SourceDevice sourceDevice = new DeviceBuilder<>(new SourceDevice())
-                .withId(null)
+                .withId("1")
                 .build();
         RegisterMessage message = new RegisterMessageBuilder()
                 .build();
+        when(deviceRepository.findOneByHostAndDeviceType(Matchers.anyString(),Matchers.any()))
+                .thenReturn(Optional.ofNullable(sourceDevice));
         when(deviceRepository.save(Matchers.<Device>any())).thenReturn(sourceDevice);
 
         Optional<String> id = deviceRegistrationService.register(message);
