@@ -43,7 +43,7 @@ public class DefaultDeviceRegistrationServiceTest {
                 .withHost("127.0.0.1")
                 .withDeviceType(DeviceType.SOURCE)
                 .build();
-        when(deviceRepository.save(Matchers.<Device>any())).thenReturn(sourceDevice);
+        when(deviceRepository.save(Matchers.any())).thenReturn(sourceDevice);
         when(deviceRepository.findOneByHostAndDeviceType(Matchers.anyString(),Matchers.any()))
                 .thenReturn(Optional.empty());
 
@@ -59,12 +59,10 @@ public class DefaultDeviceRegistrationServiceTest {
                 .build();
         RegisterMessage message = new RegisterMessageBuilder()
                 .build();
-        when(deviceRepository.findOneByHostAndDeviceType(Matchers.anyString(),Matchers.any()))
-                .thenReturn(Optional.ofNullable(sourceDevice));
         when(deviceRepository.save(Matchers.<Device>any())).thenReturn(sourceDevice);
 
         Optional<String> id = deviceRegistrationService.register(message);
 
-        assertThat(id).isNotPresent();
+        assertThat(id).isPresent();
     }
 }
