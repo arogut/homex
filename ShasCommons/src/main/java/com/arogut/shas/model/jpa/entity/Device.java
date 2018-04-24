@@ -3,9 +3,9 @@ package com.arogut.shas.model.jpa.entity;
 import com.arogut.shas.model.DeviceType;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 
 @Entity
