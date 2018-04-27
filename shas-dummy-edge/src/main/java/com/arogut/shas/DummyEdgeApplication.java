@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 @Component
-public class ShasDummyEdgeApplication implements CommandLineRunner {
+public class DummyEdgeApplication implements CommandLineRunner {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShasDummyEdgeApplication.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DummyEdgeApplication.class);
 
 	private final RabbitTemplate rabbitTemplate;
 	private final ConfigurableApplicationContext context;
 
-	public ShasDummyEdgeApplication(RabbitTemplate rabbitTemplate,
-				  ConfigurableApplicationContext context) {
+	public DummyEdgeApplication(RabbitTemplate rabbitTemplate,
+                                ConfigurableApplicationContext context) {
 		this.rabbitTemplate = rabbitTemplate;
 		this.context = context;
 	}
@@ -32,7 +32,7 @@ public class ShasDummyEdgeApplication implements CommandLineRunner {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(ShasDummyEdgeApplication.class, args);
+		SpringApplication.run(DummyEdgeApplication.class, args);
 	}
 
 }

@@ -7,12 +7,12 @@
 	<artifactId>Shas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
     <modules>
-        <module>ShasCore</module>
-		<module>ShasDummyEdge</module>
-		<module>ShasEdge</module>
-		<module>ShasUI</module>
-		<module>DeviceRegistrationService</module>
-		<module>ShasCommons</module>
+        <module>shas-core</module>
+		<module>shas-dummy-edge</module>
+		<module>shas-edge</module>
+		<module>shas-ui</module>
+		<module>shas-device-registry</module>
+		<module>shas-common</module>
 	</modules>
     <packaging>pom</packaging>
 
