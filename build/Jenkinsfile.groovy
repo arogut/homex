@@ -12,19 +12,9 @@ try {
                 git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
             }
             stage("Build") {
-                sh "mvn clean package -Popenshift"
+                sh "mvn clean verify"
             }
         }
-/*        node {
-            stage("Build Image") {
-                unstash name:"war"
-                sh "oc start-build ${appName}-docker --from-file=target/ROOT.war -n ${project}"
-                openshiftVerifyBuild bldCfg: "${appName}-docker", namespace: project, waitTime: '20', waitUnit: 'min'
-            }
-            stage("Deploy") {
-                openshiftDeploy deploymentConfig: appName, namespace: project
-            }
-        }*/
     }
 } catch (err) {
     echo "in catch block"
