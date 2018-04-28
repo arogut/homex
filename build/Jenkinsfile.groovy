@@ -1,10 +1,9 @@
 try {
     timeout(time: 20, unit: 'MINUTES') {
         def appName="${APP_NAME}"
-        def project=""
         node {
             stage("Initialize") {
-                project = env.PROJECT_NAME
+
             }
         }
         node("maven") {
