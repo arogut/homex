@@ -5,7 +5,7 @@ try {
 //                git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
 //            }
             stage("Build") {
-                sh "mvn clean verify"
+                sh "mvn -f ../pom.xml clean verify"
             }
         }
     }
