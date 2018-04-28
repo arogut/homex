@@ -2,7 +2,7 @@ try {
     timeout(time: 20, unit: 'MINUTES') {
         node("maven") {
             stage("Checkout") {
-                git url: "${SOURCE_REPOSITORY_URL}", branch: "${SOURCE_REPOSITORY_REF}"
+                checkout scm
             }
             stage("Build") {
                 sh "mvn clean verify"
