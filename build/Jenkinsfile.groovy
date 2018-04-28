@@ -1,15 +1,9 @@
 try {
     timeout(time: 20, unit: 'MINUTES') {
-        def appName="${APP_NAME}"
-        node {
-            stage("Initialize") {
-
-            }
-        }
         node("maven") {
-            stage("Checkout") {
-                git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
-            }
+//            stage("Checkout") {
+//                git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+//            }
             stage("Build") {
                 sh "mvn clean verify"
             }
