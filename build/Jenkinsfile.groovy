@@ -1,6 +1,6 @@
 try {
     timeout(time: 20, unit: 'MINUTES') {
-        appVersion = version()
+        def appVersion = version()
         node("maven") {
             stage("Checkout") {
                 checkout scm
