@@ -102,7 +102,7 @@ objects:
     runPolicy: Serial
     source:
       dockerStrategy:
-          dockerfilePath: build/${APPLICATION_NAME}/
+          dockerfilePath: build/${APPLICATION_NAME}/Dockerfile
       binary:
         asFile: ROOT.jar
       type: Docker
