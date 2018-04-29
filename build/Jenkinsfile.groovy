@@ -5,11 +5,11 @@ try {
                 checkout scm
             }
             stage("Build") {
+                def appVersion = version()
                 sh "mvn clean verify"
                 sh "cp shas-device-registry/target/ShasDeviceRegistry-${appVersion}-exec.jar build/shas-device-registry/app.jar"
             }
             stage("Build Image") {
-                def appVersion = version()
 //              build device registry TODO: change it
                 sh "oc start-build shas-device-registry-docker --from-file=build/shas-device-registry/Dockerfile -n shas-int"
             }
