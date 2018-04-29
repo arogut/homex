@@ -11,7 +11,7 @@ try {
             }
             stage("Build Image") {
 //              build device registry TODO: change it
-                sh "oc start-build shas-device-registry-docker --from-file=build/shas-device-registry/Dockerfile -n shas-int"
+                sh "oc start-build shas-device-registry-docker --from-dir=build/shas-device-registry -n shas-int"
             }
         }
     }
