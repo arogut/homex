@@ -1,4 +1,4 @@
 FROM openjdk:8-jdk-alpine
 
-COPY app.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+COPY app.jar /deployments/app.jar
+ENTRYPOINT ["java","-jar","/deployments/app.jar"]

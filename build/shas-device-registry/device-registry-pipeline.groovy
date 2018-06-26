@@ -10,8 +10,7 @@ try {
                 sh "cp shas-device-registry/target/ShasDeviceRegistry-${appVersion}-exec.jar build/shas-device-registry/app.jar"
             }
             stage("Build Image") {
-//              build device registry TODO: change it
-                sh "oc start-build shas-device-registry-docker --from-dir=build/shas-device-registry -n shas-int"
+                sh "oc start-build shas-device-registry-docker --from-dir=build/shas-device-registry -n shas-int --follow"
             }
         }
     }

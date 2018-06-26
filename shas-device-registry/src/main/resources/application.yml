@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: "jdbc:postgresql://192.168.0.250:5432/shas-db"
-    username: postgres
-    password: ${POSTGRESS_PASSWORD:admin}
+    url: "jdbc:postgresql://${DB_PATH}:${DB_PORT}/${DB_NAME}"
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect

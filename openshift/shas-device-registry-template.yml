@@ -36,7 +36,6 @@ objects:
     name: ${APPLICATION_NAME}
     namespace: ${NAMESPACE}
   spec:
-    host: ${HOSTNAME_HTTP}
     to:
       name: ${APPLICATION_NAME}
 - apiVersion: v1
@@ -68,6 +67,27 @@ objects:
       spec:
         containers:
         - env:
+            - name: DB_PATH
+              value: postgresql
+            - name: DB_PORT
+              value: '5432'
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: postgresql
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: postgresql
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: postgresql
+            - name: SPRING_CONFIG_LOCATION
+              value: /deployments/config/application.yml
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
           name: ${APPLICATION_NAME}
@@ -75,7 +95,18 @@ objects:
           - containerPort: 8080
             name: http
             protocol: TCP
+          volumeMounts:
+            - mountPath: /deployments/config
+              name: volume-ynp1i
         terminationGracePeriodSeconds: 60
+        volumes:
+          - configMap:
+              defaultMode: 420
+              items:
+                - key: application.yml
+                  path: application.yml
+              name: shas-device-registry-cfg
+            name: volume-ynp1i
     triggers:
     - imageChangeParams:
         automatic: true
@@ -93,6 +124,7 @@ objects:
       app: ${APPLICATION_NAME}-docker
     name: ${APPLICATION_NAME}-docker
   spec:
+    nodeSelector: null
     output:
       to:
         kind: ImageStreamTag
@@ -101,18 +133,38 @@ objects:
     resources: {}
     runPolicy: Serial
     source:
-      dockerStrategy:
-          dockerfilePath: build/${APPLICATION_NAME}/Dockerfile
       binary:
         asFile: ROOT.jar
-      type: Docker
+      type: Binary
     strategy:
-      dockerStrategy:
-        from:
-          kind: ImageStreamTag
-          name: ${APPLICATION_NAME}:latest
+      dockerStrategy: {}
       type: Docker
     triggers: []
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${APPLICATION_NAME}-cfg
+    namespace: ${NAMESPACE}
+  data:
+    application.yml: |-
+      server:
+        port: 8081
+
+      spring:
+        datasource:
+          url: "jdbc:postgresql://${DB_PATH}:${DB_PORT}/${DB_NAME}"
+          username: ${DB_USER}
+          password: ${DB_PASSWORD}
+          driverClassName: org.postgresql.Driver
+        jpa:
+          database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+          hibernate:
+            ddl-auto: create
+          show-sql: false
+        jackson:
+          serialization:
+            indent_output: true
+
 parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
@@ -121,6 +173,3 @@ parameters:
 - description: The namespace to deploy into
   name: NAMESPACE
   required: true
-- description: 'Custom hostname for http service route.  Leave blank for default hostname,
-    e.g.: <application-name>-<project>.<default-domain-suffix>'
-  name: HOSTNAME_HTTP
