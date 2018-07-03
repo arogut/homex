@@ -92,9 +92,15 @@ objects:
               value: '5672'
             #TODO: MOVE THESE TWO TO SECRETS
             - name: RABBITMQ_USER
-              value: guest
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: rabbitmq
             - name: RABBITMQ_PASSWORD
-              value: guest
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: rabbitmq
             - name: SPRING_CONFIG_LOCATION
               value: /deployments/config/application.yml
           image: ${APPLICATION_NAME}
