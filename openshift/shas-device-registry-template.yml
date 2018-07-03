@@ -141,6 +141,20 @@ objects:
       type: Docker
     triggers: []
 - apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: ${APPLICATION_NAME}-pipeline
+  spec:
+    source:
+      git:
+        ref: pipeline
+        uri: https://github.com/arogut/shas.git
+      type: Git
+    strategy:
+      type: JenkinsPipeline
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: build/shas-device-registry/device-registry-pipeline.groovy
+- apiVersion: v1
   kind: ConfigMap
   metadata:
     name: ${APPLICATION_NAME}-cfg
