@@ -89,7 +89,7 @@ objects:
             - name: RABBITMQ_HOST
               value: rabbitmq-shas.192.168.42.222.nip.io
             - name: RABBITMQ_PORT
-              value: 4369
+              value: '4369'
             #TODO: MOVE THESE TWO TO SECRETS
             - name: RABBITMQ_USER
               value: guest
@@ -114,7 +114,7 @@ objects:
               items:
                 - key: application.yml
                   path: application.yml
-              name: shas-device-registry-cfg
+              name: ${APPLICATION_NAME}-cfg
             name: volume-ynp1i
     triggers:
     - imageChangeParams:
@@ -200,7 +200,7 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: shas-device-registry
+  value: shas-core
 - description: The namespace to deploy into
   name: NAMESPACE
   required: true

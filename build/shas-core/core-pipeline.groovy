@@ -7,10 +7,10 @@ try {
             stage("Build") {
                 def appVersion = version()
                 sh "mvn clean verify"
-                sh "cp shas-device-registry/target/ShasDeviceRegistry-${appVersion}-exec.jar build/shas-device-registry/app.jar"
+                sh "cp shas-core/target/ShasCore-${appVersion}-exec.jar build/shas-core/app.jar"
             }
             stage("Build Image") {
-                sh "oc start-build shas-device-registry-docker --from-dir=build/shas-device-registry -n shas --follow"
+                sh "oc start-build shas-core-docker --from-dir=build/shas-core -n shas --follow"
             }
         }
     }
