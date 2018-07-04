@@ -109,6 +109,36 @@ objects:
           type: Source
 
 - apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: rabbitmq
+    name: rabbitmq
+  spec:
+    clusterIP: 172.30.244.146
+    ports:
+      - name: 4369-tcp
+        port: 4369
+        protocol: TCP
+        targetPort: 4369
+      - name: 5671-tcp
+        port: 5671
+        protocol: TCP
+        targetPort: 5671
+      - name: 5672-tcp
+        port: 5672
+        protocol: TCP
+        targetPort: 5672
+      - name: 25672-tcp
+        port: 25672
+        protocol: TCP
+        targetPort: 25672
+    selector:
+      deploymentconfig: rabbitmq
+    sessionAffinity: None
+    type: ClusterIP
+
+- apiVersion: v1
   stringData:
     password: ${RABBITMQ_PASSWORD}
     username: ${RABBITMQ_USER}

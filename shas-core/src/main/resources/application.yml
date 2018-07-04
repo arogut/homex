@@ -1,8 +1,10 @@
+server:
+  port: 8080
+
 app:
   receive:
     queue: "message-in"
     topic: "message-in-ex"
-
 
 spring:
   datasource:
