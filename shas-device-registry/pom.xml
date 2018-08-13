@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.arogut</groupId>
-            <artifactId>ShasCommons</artifactId>
+            <artifactId>shas-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
