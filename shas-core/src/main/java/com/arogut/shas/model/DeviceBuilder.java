@@ -1,9 +1,5 @@
 package com.arogut.shas.model;
 
-import com.arogut.shas.model.jpa.entity.Device;
-
-import java.time.Instant;
-
 public class DeviceBuilder<T extends Device> {
 
     private T device;
@@ -34,11 +30,6 @@ public class DeviceBuilder<T extends Device> {
 
     public DeviceBuilder<T> withPost(int port) {
         device.setPort(port);
-        return this;
-    }
-
-    public DeviceBuilder<T> withLastConnection(Instant timestamp) {
-        device.setLastConnection(timestamp);
         return this;
     }
 

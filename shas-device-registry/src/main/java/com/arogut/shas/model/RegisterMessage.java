@@ -2,7 +2,6 @@ package com.arogut.shas.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.*;
 import java.util.Map;

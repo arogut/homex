@@ -1,16 +1,15 @@
 package com.arogut.shas.rest;
 
-import com.arogut.shas.model.jpa.entity.Device;
+import com.arogut.shas.model.Device;
 import com.arogut.shas.service.DeviceProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
@@ -31,6 +30,7 @@ public class DeviceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getDeviceById(@PathVariable("id") String id) {
-        return deviceProviderService.getById(id).map(x -> status(OK).body(x)).orElse(status(NOT_FOUND).build());
+        return deviceProviderService.getById(id).map(x -> status(HttpStatus.OK).body(x))
+                .orElse(status(HttpStatus.NOT_FOUND).build());
     }
 }

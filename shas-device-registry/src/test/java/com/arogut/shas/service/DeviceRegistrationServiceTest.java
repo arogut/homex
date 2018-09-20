@@ -1,18 +1,13 @@
 package com.arogut.shas.service;
 
-import com.arogut.shas.model.DeviceBuilder;
-import com.arogut.shas.model.DeviceType;
-import com.arogut.shas.model.RegisterMessage;
-import com.arogut.shas.model.RegisterMessageBuilder;
-import com.arogut.shas.model.jpa.entity.Device;
-import com.arogut.shas.model.jpa.entity.SourceDevice;
-import com.arogut.shas.model.jpa.repository.DeviceRepository;
+import com.arogut.shas.model.*;
+import com.arogut.shas.repository.DeviceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -21,21 +16,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultDeviceRegistrationServiceTest {
+public class DeviceRegistrationServiceTest {
 
     @Mock
     private DeviceRepository deviceRepository;
 
     @InjectMocks
-    private DefaultDeviceRegistrationService deviceRegistrationService;
+    private DeviceRegistrationService deviceRegistrationService;
 
     @Test
     public void shouldRegisterDevice() {
         Instant lastConnection = Instant.now();
-        SourceDevice sourceDevice = new DeviceBuilder<>(new SourceDevice())
+        Device sourceDevice = new DeviceBuilder<>(new Device())
                 .withId("test")
                 .withHost("127.0.0.1")
-                .withLastConnection(lastConnection)
                 .withIsConnected(true)
                 .build();
         RegisterMessage message = new RegisterMessageBuilder()
@@ -44,7 +38,7 @@ public class DefaultDeviceRegistrationServiceTest {
                 .withDeviceType(DeviceType.SOURCE)
                 .build();
         when(deviceRepository.save(Matchers.any())).thenReturn(sourceDevice);
-        when(deviceRepository.findOneByHostAndDeviceType(Matchers.anyString(),Matchers.any()))
+        when(deviceRepository.findOneByHostAndDeviceType(Matchers.anyString(), Matchers.any()))
                 .thenReturn(Optional.empty());
 
         Optional<String> id = deviceRegistrationService.register(message);
@@ -54,7 +48,7 @@ public class DefaultDeviceRegistrationServiceTest {
 
     @Test
     public void shouldReturnRegisterDeviceWithSameHostAndType() {
-        SourceDevice sourceDevice = new DeviceBuilder<>(new SourceDevice())
+        Device sourceDevice = new DeviceBuilder<>(new Device())
                 .withId("1")
                 .build();
         RegisterMessage message = new RegisterMessageBuilder()

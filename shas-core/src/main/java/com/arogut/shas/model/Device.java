@@ -1,12 +1,10 @@
-package com.arogut.shas.model.jpa.entity;
+package com.arogut.shas.model;
 
-import com.arogut.shas.model.DeviceType;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
 
 @Entity
 @Table(name = "device")
@@ -14,13 +12,13 @@ import java.time.Instant;
 @DiscriminatorColumn(name = "deviceType")
 @Getter
 @Setter
-public abstract class Device {
+public class Device {
     @Id
     @NotEmpty
     private String id;
     @Column
     private String name;
-    @Column(name = "deviceType",insertable = false, updatable = false)
+    @Column(name = "deviceType", insertable = false, updatable = false)
     private DeviceType deviceType;
     @Column
     private boolean isConnected;
@@ -28,6 +26,4 @@ public abstract class Device {
     private String host;
     @Column
     private int port;
-    @Column
-    private Instant lastConnection;
 }

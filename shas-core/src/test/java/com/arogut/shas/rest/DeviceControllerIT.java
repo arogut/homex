@@ -1,9 +1,8 @@
 package com.arogut.shas.rest;
 
+import com.arogut.shas.model.Device;
 import com.arogut.shas.model.DeviceBuilder;
-import com.arogut.shas.model.jpa.entity.Device;
-import com.arogut.shas.model.jpa.entity.SourceDevice;
-import com.arogut.shas.service.DefaultDeviceProviderService;
+import com.arogut.shas.service.DeviceProviderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DeviceControllerIT {
 
     @Mock
-    private DefaultDeviceProviderService deviceProvider;
+    private DeviceProviderService deviceProvider;
 
     @InjectMocks
     private DeviceController deviceController;
@@ -37,7 +36,7 @@ public class DeviceControllerIT {
 
     @Test
     public void shouldReturnDeviceAnd200OK() throws Exception {
-        Device dev = new DeviceBuilder<>(new SourceDevice()).withId("test").build();
+        Device dev = new DeviceBuilder<>(new Device()).withId("test").build();
 
         when(deviceProvider.getById("test")).thenReturn(Optional.ofNullable(dev));
 
@@ -53,7 +52,7 @@ public class DeviceControllerIT {
 
     @Test
     public void shouldReturnDevicesAnd200OK() throws Exception {
-        Device dev = new DeviceBuilder<>(new SourceDevice()).withId("test").build();
+        Device dev = new DeviceBuilder<>(new Device()).withId("test").build();
 
         when(deviceProvider.getById("test")).thenReturn(Optional.ofNullable(dev));
 

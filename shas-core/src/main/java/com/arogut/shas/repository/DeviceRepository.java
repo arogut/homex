@@ -1,13 +1,13 @@
-package com.arogut.shas.model.jpa.repository;
+package com.arogut.shas.repository;
 
+import com.arogut.shas.model.Device;
 import com.arogut.shas.model.DeviceType;
-import com.arogut.shas.model.jpa.entity.Device;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface DeviceRepository extends CrudRepository<Device, String> {
 
     Optional<Device> findOneById(String id);
