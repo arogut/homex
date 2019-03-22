@@ -1,15 +1,15 @@
 coverage:
   status:
     project:
-      ShasCore:
+      HomexCore:
         paths:
-          - "ShasCore/"
+          - "homex-core/"
         target: 85%
-      ShasEdge:
+      HomexEdge:
         paths:
-          - "ShasEdge/"
+          - "homex-edge/"
         target: 85%
-      ShasUI:
+      HomexAuth:
         paths:
-          - "ShasUI/"
+          - "homex-auth/"
         target: 85%
