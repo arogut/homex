@@ -2,11 +2,11 @@ package com.arogut.homex.service;
 
 import com.arogut.homex.model.Device;
 import com.arogut.homex.repository.DeviceRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -15,8 +15,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeviceRegistrationServiceTest {
+@ExtendWith(MockitoExtension.class)
+class DeviceRegistrationServiceTest {
 
     @Mock
     private DeviceRepository deviceRepository;
@@ -25,7 +25,7 @@ public class DeviceRegistrationServiceTest {
     private DeviceRegistrationService deviceRegistrationService;
 
     @Test
-    public void shouldRegisterDevice() {
+    void shouldRegisterDevice() {
         Device sourceDevice = Device.builder()
                 .id("test")
                 .host("127.0.0.1")
@@ -41,7 +41,7 @@ public class DeviceRegistrationServiceTest {
     }
 
     @Test
-    public void shouldReturnRegisterDeviceWithSameHostAndType() {
+    void shouldReturnRegisterDeviceWithSameHostAndType() {
         Device sourceDevice = Device.builder()
                 .id("1")
                 .build();

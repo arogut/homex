@@ -2,12 +2,12 @@ package com.arogut.homex.rest;
 
 import com.arogut.homex.model.Device;
 import com.arogut.homex.service.DeviceService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-public class DeviceControllerIT {
+@ExtendWith(SpringExtension.class)
+class DeviceControllerIT {
 
     @Mock
     private DeviceService deviceProvider;
@@ -28,13 +28,13 @@ public class DeviceControllerIT {
 
     private MockMvc mockMvc;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(deviceController).build();
     }
 
     @Test
-    public void shouldReturnDeviceAnd200OK() throws Exception {
+    void shouldReturnDeviceAnd200OK() throws Exception {
         Device dev = Device.builder().id("test").build();
 
         when(deviceProvider.getById("test")).thenReturn(Optional.ofNullable(dev));
@@ -43,14 +43,14 @@ public class DeviceControllerIT {
     }
 
     @Test
-    public void shouldReturn400NotFoundWhenNotExisits() throws Exception {
+    void shouldReturn400NotFoundWhenNotExisits() throws Exception {
         when(deviceProvider.getById("test12")).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/devices/test12")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void shouldReturnDevicesAnd200OK() throws Exception {
+    void shouldReturnDevicesAnd200OK() throws Exception {
         Device dev = Device.builder().id("test").build();
 
         when(deviceProvider.getById("test")).thenReturn(Optional.ofNullable(dev));

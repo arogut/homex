@@ -2,11 +2,11 @@ package com.arogut.homex.service;
 
 import com.arogut.homex.model.Device;
 import com.arogut.homex.repository.DeviceRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DeviceServiceTest {
+@ExtendWith(MockitoExtension.class)
+class DeviceServiceTest {
 
     @Mock
     private DeviceRepository deviceRepository;
@@ -26,7 +26,7 @@ public class DeviceServiceTest {
     private DeviceService deviceService;
 
     @Test
-    public void shouldReturnAllDevicesFromDB() {
+    void shouldReturnAllDevicesFromDB() {
         List<Device> devices = Arrays.asList(Device.builder().build(), Device.builder().build());
         when(deviceRepository.findAll()).thenReturn(devices);
 
@@ -34,7 +34,7 @@ public class DeviceServiceTest {
     }
 
     @Test
-    public void shouldReturnSingleDeviceById() {
+    void shouldReturnSingleDeviceById() {
         Device device = Device.builder().id("1").build();
         when(deviceRepository.findOneById(anyString())).thenReturn(Optional.of(device));
 
