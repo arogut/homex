@@ -12,13 +12,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            "/h2-console",
+            // -- actuator
+            "/actuator/**"
     };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll();
+                .antMatchers(AUTH_WHITELIST).permitAll()
+                .anyRequest().authenticated();
     }
 
 }
