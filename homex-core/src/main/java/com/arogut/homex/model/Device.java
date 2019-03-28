@@ -3,7 +3,6 @@ package com.arogut.homex.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
@@ -31,5 +30,5 @@ public class Device {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Measurement> measurements;
+    private List<DeviceMessage> measurements;
 }

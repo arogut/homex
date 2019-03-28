@@ -1,6 +1,6 @@
 package com.arogut.homex.service;
 
-import com.arogut.homex.model.Measurement;
+import com.arogut.homex.model.DeviceMessage;
 import com.arogut.homex.repository.MeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ public class MeasurementProviderService {
         this.measurementRepository = measurementRepository;
     }
 
-    public Iterable<Measurement> getAll() {
+    public Iterable<DeviceMessage> getAll() {
         return measurementRepository.findAll();
     }
 
-    public Iterable<Measurement> getAllByDeviceId(String deviceId) {
+    public Iterable<DeviceMessage> getAllByDeviceId(String deviceId) {
         return measurementRepository.getAllByDeviceId(deviceId);
     }
 
