@@ -12,7 +12,7 @@ import java.net.URI;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
-@RequestMapping("/devices")
+@RequestMapping("/device")
 public class DeviceController {
 
     private final DeviceService deviceService;

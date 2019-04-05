@@ -18,9 +18,9 @@ public class DeviceMessage {
     @Column
     private String deviceId;
     @Column
-    private long timeMeasured;
+    private long measuredTime;
     @Column
-    private long timeReceived;
+    private long receivedTime;
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true

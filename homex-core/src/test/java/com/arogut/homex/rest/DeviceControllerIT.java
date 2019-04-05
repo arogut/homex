@@ -39,14 +39,14 @@ class DeviceControllerIT {
 
         when(deviceProvider.getById("test")).thenReturn(Optional.ofNullable(dev));
 
-        mockMvc.perform(get("/devices/test")).andExpect(status().isOk());
+        mockMvc.perform(get("/device/test")).andExpect(status().isOk());
     }
 
     @Test
     void shouldReturn400NotFoundWhenNotExisits() throws Exception {
         when(deviceProvider.getById("test12")).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/devices/test12")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/device/test12")).andExpect(status().isNotFound());
     }
 
     @Test
@@ -55,6 +55,6 @@ class DeviceControllerIT {
 
         when(deviceProvider.getById("test")).thenReturn(Optional.ofNullable(dev));
 
-        mockMvc.perform(get("/devices")).andExpect(status().isOk());
+        mockMvc.perform(get("/device")).andExpect(status().isOk());
     }
 }

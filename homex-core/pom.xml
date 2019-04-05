@@ -16,6 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
 
+        <influxdb.version>2.15</influxdb.version>
         <swagger.version>2.9.2</swagger.version>
         <assertj.version>3.12.2</assertj.version>
         <junit.jupiter.version>5.4.1</junit.jupiter.version>
@@ -72,6 +73,11 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
+            <version>${influxdb.version}</version>
         </dependency>
 
         <!-- SWAGGER -->

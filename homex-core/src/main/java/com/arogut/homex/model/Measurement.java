@@ -2,19 +2,14 @@ package com.arogut.homex.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.influxdb.annotation.Column;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "measurement")
 @Getter
 @Setter
+@org.influxdb.annotation.Measurement(name = "measurement")
 public class Measurement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column
+    @Column(name = "name")
     private String name;
-    @Column
+    @Column(name = "value")
     private String value;
 }
