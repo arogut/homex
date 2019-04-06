@@ -26,9 +26,4 @@ public class Device {
     private String host;
     @Column
     private int port;
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<DeviceMessage> measurements;
 }
