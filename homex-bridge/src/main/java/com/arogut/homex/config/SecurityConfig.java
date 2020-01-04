@@ -12,8 +12,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_WHITELIST = {
             // -- swagger ui
             "/swagger-resources/**",
+            "/swagger-ui/**",
             "/swagger-ui.html",
-            "/v2/api-docs",
+            "/v3/api-docs",
             "/webjars/**",
             "/h2-console",
             // -- actuator
@@ -24,7 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .csrf().ignoringAntMatchers("/h2-console/**")
+                .and()
+                .cors().disable();
+        http.headers().frameOptions().disable();
     }
 
 }

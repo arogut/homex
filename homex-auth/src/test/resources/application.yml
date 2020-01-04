@@ -1,8 +1,0 @@
-app:
-  receive:
-    queue: "message-test-in"
-    topic: "message-test-in-ex"
-
-spring:
-  datasource:
-    name: h2

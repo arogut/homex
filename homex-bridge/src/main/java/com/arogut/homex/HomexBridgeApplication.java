@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HomexCoreApplication {
+public class HomexBridgeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HomexCoreApplication.class, args);
+		SpringApplication.run(HomexBridgeApplication.class, args);
 	}
 }

@@ -1,15 +1,11 @@
 coverage:
   status:
     project:
-      HomexCore:
+      HomexBridge:
         paths:
-          - "homex-core/"
+          - "homex-bridge/"
         target: 85%
       HomexEdge:
         paths:
           - "homex-edge/"
-        target: 85%
-      HomexAuth:
-        paths:
-          - "homex-auth/"
         target: 85%
