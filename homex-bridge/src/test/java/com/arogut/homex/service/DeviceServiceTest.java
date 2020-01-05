@@ -30,15 +30,15 @@ class DeviceServiceTest {
         List<Device> devices = Arrays.asList(Device.builder().build(), Device.builder().build());
         when(deviceRepository.findAll()).thenReturn(devices);
 
-        assertThat(deviceService.getAll()).containsExactlyElementsOf(devices);
+        assertThat(deviceService.getAll().collectList().block()).containsExactlyElementsOf(devices);
     }
 
     @Test
     void shouldReturnSingleDeviceById() {
         Device device = Device.builder().id("1").build();
-        when(deviceRepository.findOneById(anyString())).thenReturn(Optional.of(device));
+        when(deviceRepository.findOneById(anyString())).thenReturn(Optional.ofNullable(device));
 
-        assertThat(deviceService.getById("1")).isPresent();
-        assertThat(deviceService.getById("1")).contains(device);
+        assertThat(deviceService.getById("1").blockOptional()).isPresent();
+        assertThat(deviceService.getById("1").blockOptional()).contains(device);
     }
 }

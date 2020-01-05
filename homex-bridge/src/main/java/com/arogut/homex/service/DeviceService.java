@@ -4,8 +4,8 @@ import com.arogut.homex.model.Device;
 import com.arogut.homex.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class DeviceService {
@@ -17,15 +17,15 @@ public class DeviceService {
         this.deviceRepository = deviceRepository;
     }
 
-    public Iterable<Device> getAll() {
-        return deviceRepository.findAll();
+    public Flux<Device> getAll() {
+        return Flux.fromIterable(deviceRepository.findAll());
     }
 
-    public Optional<Device> getById(String id) {
-        return deviceRepository.findOneById(id);
+    public Mono<Device> getById(String id) {
+        return Mono.justOrEmpty(deviceRepository.findOneById(id));
     }
 
-    public String add(Device device) {
-        return deviceRepository.save(device).getId();
+    public Mono<String> add(Mono<Device> device) {
+        return Mono.just(deviceRepository.save(device.block()).getId());
     }
 }
