@@ -1,6 +1,5 @@
 package com.arogut.homex.rest;
 
-import com.arogut.homex.config.RouterConfig;
 import com.arogut.homex.model.Device;
 import com.arogut.homex.service.DeviceService;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,9 @@ import reactor.core.publisher.Mono;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RouterConfig.class, DeviceHandler.class})
+@ContextConfiguration(classes = {DeviceController.class})
 @WebFluxTest
-class DeviceHandlerTest {
+class DeviceControllerTest {
 
     private static final String USER = "admin";
 
@@ -38,7 +37,7 @@ class DeviceHandlerTest {
         when(deviceService.getById("test")).thenReturn(Mono.just(dev));
 
         webClient.get()
-                .uri("/device/test")
+                .uri("/devices/test")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -49,7 +48,7 @@ class DeviceHandlerTest {
         when(deviceService.getById("test12")).thenReturn(Mono.empty());
 
         webClient.get()
-                .uri("/device/test12")
+                .uri("/devices/test12")
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -60,7 +59,7 @@ class DeviceHandlerTest {
         when(deviceService.getAll()).thenReturn(Flux.empty());
 
         webClient.get()
-                .uri("/device")
+                .uri("/devices")
                 .exchange()
                 .expectStatus().isOk();
     }

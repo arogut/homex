@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/device/message")
+@RequestMapping("/devices/message")
 public class DeviceMessageController {
 
     private final DeviceMessageService deviceMessageService;
