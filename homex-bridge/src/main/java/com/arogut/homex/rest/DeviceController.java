@@ -2,28 +2,25 @@ package com.arogut.homex.rest;
 
 import com.arogut.homex.model.Device;
 import com.arogut.homex.service.DeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/devices")
+@RequiredArgsConstructor
 public class DeviceController {
 
     private final DeviceService deviceService;
 
-    @Autowired
-    public DeviceController(DeviceService deviceService) {
-        this.deviceService = deviceService;
-    }
-
     @PostMapping
-    public Mono<ServerResponse> addDevice(@RequestBody Device device) {
-        return ServerResponse.created(URI.create("/devices/" + deviceService.add(device))).build();
+    public Mono<ResponseEntity<Void>> addDevice(@Valid @RequestBody Device device) {
+        return Mono.just(ResponseEntity.created(URI.create("/devices/" + deviceService.add(device).block())).build());
     }
 
     @GetMapping
