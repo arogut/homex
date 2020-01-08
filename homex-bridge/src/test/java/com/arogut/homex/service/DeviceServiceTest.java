@@ -41,4 +41,12 @@ class DeviceServiceTest {
         assertThat(deviceService.getById("1").blockOptional()).isPresent();
         assertThat(deviceService.getById("1").blockOptional()).contains(device);
     }
+
+    @Test
+    void shouldSuccessfullyAddDevice() {
+        Device device = Device.builder().id("1").build();
+        when(deviceRepository.save(device)).thenReturn(device);
+
+        assertThat(deviceService.add(device).block()).isEqualTo(device.getId());
+    }
 }
