@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
@@ -25,11 +26,14 @@ class DeviceMessageServiceTest {
     @Mock
     private InfluxDB influxDB;
 
+    @Mock
+    private DeviceService deviceService;
+
     @InjectMocks
     private DeviceMessageService deviceMessageServiceService;
 
     @Test
-    void shouldReturnAllDevicesFromDB() {
+    void shouldAcceptDeviceMessage() {
         DeviceMessage msg = DeviceMessage.builder()
                 .deviceId("dummy")
                 .measuredTime(Instant.now().toEpochMilli())
@@ -40,7 +44,9 @@ class DeviceMessageServiceTest {
                 ))
                 .build();
 
-        deviceMessageServiceService.handle(msg);
+        Mockito.when(deviceService.existsById(Mockito.any())).thenReturn(Mono.just(true));
+
+        deviceMessageServiceService.handle(msg).block();
 
         ArgumentCaptor<BatchPoints> pointsCaptor = ArgumentCaptor.forClass(BatchPoints.class);
         Mockito.verify(influxDB).write(pointsCaptor.capture());

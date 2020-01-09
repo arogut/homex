@@ -21,7 +21,8 @@ public class DeviceMessageController {
 
     @PostMapping
     public Mono<ResponseEntity<Void>> receiveMessage(@Valid @RequestBody DeviceMessage message) {
-        deviceMessageService.handle(message);
-        return Mono.just(ResponseEntity.accepted().build());
+        return deviceMessageService.handle(message)
+                .map(r -> ResponseEntity.accepted().<Void>build())
+                .defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 }

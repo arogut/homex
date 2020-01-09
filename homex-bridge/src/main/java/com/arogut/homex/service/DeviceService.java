@@ -25,6 +25,10 @@ public class DeviceService {
         return Mono.justOrEmpty(deviceRepository.findOneById(id));
     }
 
+    public Mono<Boolean> existsById(String id) {
+        return Mono.just(deviceRepository.existsById(id));
+    }
+
     public Mono<String> add(Device device) {
         return Mono.just(deviceRepository.save(device).getId());
     }
