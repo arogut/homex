@@ -2,19 +2,18 @@ package com.arogut.homex.service;
 
 import com.arogut.homex.model.Device;
 import com.arogut.homex.repository.DeviceRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DeviceServiceTest {
@@ -28,25 +27,32 @@ class DeviceServiceTest {
     @Test
     void shouldReturnAllDevicesFromDB() {
         List<Device> devices = Arrays.asList(Device.builder().build(), Device.builder().build());
-        when(deviceRepository.findAll()).thenReturn(devices);
+        Mockito.when(deviceRepository.findAll()).thenReturn(devices);
 
-        assertThat(deviceService.getAll().collectList().block()).containsExactlyElementsOf(devices);
+        Assertions.assertThat(deviceService.getAll().collectList().block()).containsExactlyElementsOf(devices);
     }
 
     @Test
     void shouldReturnSingleDeviceById() {
         Device device = Device.builder().id("1").build();
-        when(deviceRepository.findOneById(anyString())).thenReturn(Optional.ofNullable(device));
+        Mockito.when(deviceRepository.findOneById(Mockito.anyString())).thenReturn(Optional.ofNullable(device));
 
-        assertThat(deviceService.getById("1").blockOptional()).isPresent();
-        assertThat(deviceService.getById("1").blockOptional()).contains(device);
+        Assertions.assertThat(deviceService.getById("1").blockOptional()).isPresent();
+        Assertions.assertThat(deviceService.getById("1").blockOptional()).contains(device);
     }
 
     @Test
     void shouldSuccessfullyAddDevice() {
         Device device = Device.builder().id("1").build();
-        when(deviceRepository.save(device)).thenReturn(device);
+        Mockito.when(deviceRepository.save(device)).thenReturn(device);
 
-        assertThat(deviceService.add(device).block()).isEqualTo(device.getId());
+        Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device.getId());
+    }
+
+    @Test
+    void shouldWrapRepositoryExistsWithMono() {
+        Mockito.when(deviceRepository.existsById(Mockito.anyString())).thenReturn(true);
+
+        Assertions.assertThat(deviceService.existsById("1")).isEqualTo(Mono.just(true));
     }
 }
