@@ -96,3 +96,7 @@ buildNumber.properties
 
 .idea/
 *.iml
+
+# Container data
+/docker/grafana/data/
+/docker/influxdb/data/

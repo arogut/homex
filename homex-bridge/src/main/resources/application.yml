@@ -24,9 +24,10 @@ influx:
   url: http://localhost:8086
   user: admin
   password: admin
+  database: measurement
 
 management:
   endpoints:
     web:
       exposure:
-        include: health, info, prometheus
+        include: health, info
