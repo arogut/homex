@@ -52,4 +52,21 @@ public class DeviceMessageControllerTest {
                 .expectStatus().isAccepted()
                 .expectBody().isEmpty();
     }
+
+    @Test
+    @WithMockUser
+    void shouldNotAcceptMessageAndReturn400() {
+        DeviceMessage msg = DeviceMessage.builder()
+                .deviceId("dummy")
+                .measuredTime(Instant.now().toEpochMilli())
+                .receivedTime(Instant.now().toEpochMilli())
+                .data(List.of())
+                .build();
+
+        webClient.post()
+                .uri("/devices/message")
+                .body(Mono.just(msg), DeviceMessage.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
 }

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "device")
@@ -16,16 +19,21 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Device {
     @Id
+    @GeneratedValue(generator = "UUID")
     private String id;
     @Column
+    @NotEmpty
     private String name;
     @Column(name = "deviceType", insertable = false, updatable = false)
+    @NotNull
     private DeviceType deviceType;
     @Column
     @JsonProperty
     private boolean isConnected;
     @Column
+    @NotEmpty
     private String host;
     @Column
+    @Max(99999)
     private int port;
 }

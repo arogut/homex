@@ -44,7 +44,7 @@ class DeviceControllerTest {
 
     @Test
     @WithMockUser
-    void shouldReturn404NotFoundWhenNotExisits() {
+    void shouldReturn404NotFoundWhenNotExists() {
         Mockito.when(deviceService.getById("test12")).thenReturn(Mono.empty());
 
         webClient.get()
@@ -69,6 +69,7 @@ class DeviceControllerTest {
     void shouldAcceptDeviceAndReturn200OK() {
         Device device = Device.builder()
                 .id("dummy")
+                .name("dummy")
                 .isConnected(true)
                 .deviceType(DeviceType.SOURCE)
                 .host("localhost")
@@ -85,5 +86,23 @@ class DeviceControllerTest {
                 .expectStatus().isCreated()
                 .expectHeader().valueEquals("Location", "/devices/dummy")
                 .expectBody().isEmpty();
+    }
+
+    @Test
+    @WithMockUser
+    void shouldNotAcceptDeviceAndReturn400() {
+        Device device = Device.builder()
+                .isConnected(true)
+                .deviceType(DeviceType.SOURCE)
+                .host("localhost")
+                .port(999)
+                .build();
+
+        webClient.post()
+                .uri("/devices")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(device), Device.class)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }

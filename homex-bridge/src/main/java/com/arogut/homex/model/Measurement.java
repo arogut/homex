@@ -1,17 +1,21 @@
 package com.arogut.homex.model;
 
-import lombok.*;
-import org.influxdb.annotation.Column;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@org.influxdb.annotation.Measurement(name = "measurement")
 public class Measurement {
-    @Column(name = "name")
+    @NotNull
     private String name;
-    @Column(name = "value")
+    @NotNull
     private String value;
 }

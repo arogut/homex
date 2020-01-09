@@ -3,12 +3,12 @@ package com.arogut.homex.service;
 import com.arogut.homex.model.DeviceMessage;
 import com.arogut.homex.model.Measurement;
 import org.influxdb.InfluxDB;
+import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 public class DeviceMessageService {
@@ -20,14 +20,17 @@ public class DeviceMessageService {
     }
 
     public void handle(DeviceMessage deviceMessage) {
-        persist(deviceMessage.getData(), deviceMessage.getMeasuredTime());
+        persist(deviceMessage.getDeviceId(), deviceMessage.getData(), deviceMessage.getMeasuredTime());
     }
 
-    private void persist(List<Measurement> measurements, long measuredTime) {
-        Point.Builder pointBuilder = Point.measurement("measurement")
+    private void persist(String deviceId, List<Measurement> measurements, long measuredTime) {
+        BatchPoints.Builder batchPoints = BatchPoints.builder().tag("deviceId", deviceId);
+        measurements.forEach(m -> batchPoints.point(Point.measurement("measurement")
+                .addField(m.getName(), m.getValue())
                 .time(measuredTime, TimeUnit.MILLISECONDS)
-                .fields(measurements.stream().collect(Collectors.toMap(Measurement::getName, Measurement::getValue)));
-        influxDB.write(pointBuilder.build());
+                .build()));
+
+        influxDB.write(batchPoints.build());
     }
 
 }

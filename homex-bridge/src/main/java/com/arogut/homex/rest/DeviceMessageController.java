@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/devices/message")
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class DeviceMessageController {
     private final DeviceMessageService deviceMessageService;
 
     @PostMapping
-    public Mono<ResponseEntity<Void>> receiveMessage(@RequestBody DeviceMessage message) {
+    public Mono<ResponseEntity<Void>> receiveMessage(@Valid @RequestBody DeviceMessage message) {
         deviceMessageService.handle(message);
         return Mono.just(ResponseEntity.accepted().build());
     }

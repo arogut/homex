@@ -4,6 +4,7 @@ import com.arogut.homex.model.DeviceMessage;
 import com.arogut.homex.model.Measurement;
 import org.assertj.core.api.Assertions;
 import org.influxdb.InfluxDB;
+import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,12 +42,17 @@ class DeviceMessageServiceTest {
 
         deviceMessageServiceService.handle(msg);
 
-        ArgumentCaptor<Point> pointCaptor = ArgumentCaptor.forClass(Point.class);
-        Mockito.verify(influxDB).write(pointCaptor.capture());
-        Assertions.assertThat(pointCaptor.getValue()).isEqualTo(
-                Point.measurement("measurement")
-                        .time(msg.getMeasuredTime(), TimeUnit.MILLISECONDS)
-                        .addField("temp", "25")
+        ArgumentCaptor<BatchPoints> pointsCaptor = ArgumentCaptor.forClass(BatchPoints.class);
+        Mockito.verify(influxDB).write(pointsCaptor.capture());
+        Assertions.assertThat(pointsCaptor.getValue()).isEqualTo(
+                BatchPoints.builder()
+                        .tag("deviceId", "dummy")
+                        .point(
+                                Point.measurement("measurement")
+                                        .time(msg.getMeasuredTime(), TimeUnit.MILLISECONDS)
+                                        .addField("temp", "25")
+                                        .build()
+                        )
                         .build()
         );
     }
