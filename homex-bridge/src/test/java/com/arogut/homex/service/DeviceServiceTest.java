@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,9 +49,9 @@ class DeviceServiceTest {
     }
 
     @Test
-    void shouldWrapRepositoryExistsWithMono() {
+    void shouldReturnTrueWhenDeviceExists() {
         Mockito.when(deviceRepository.existsById(Mockito.anyString())).thenReturn(true);
 
-        Assertions.assertThat(deviceService.existsById("1")).isEqualTo(Mono.just(true));
+        Assertions.assertThat(deviceService.existsById("1").block()).isEqualTo(true);
     }
 }
