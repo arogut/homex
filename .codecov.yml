@@ -5,7 +5,8 @@ coverage:
         paths:
           - "homex-bridge/"
         target: 85%
-      HomexEdge:
-        paths:
-          - "homex-edge/"
-        target: 85%
+# Coverage for Edge not yet available
+#      HomexEdge:
+#        paths:
+#          - "homex-edge/"
+#        target: 85%
