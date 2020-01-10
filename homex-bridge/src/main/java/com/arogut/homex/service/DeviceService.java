@@ -22,7 +22,7 @@ public class DeviceService {
     }
 
     public Mono<Device> getById(String id) {
-        return Mono.justOrEmpty(deviceRepository.findOneById(id));
+        return Mono.justOrEmpty(deviceRepository.findById(id));
     }
 
     public Mono<Boolean> existsById(String id) {

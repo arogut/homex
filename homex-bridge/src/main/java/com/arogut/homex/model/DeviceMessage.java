@@ -1,5 +1,7 @@
 package com.arogut.homex.model;
 
+import com.arogut.homex.validation.ExistingDevice;
+import com.arogut.homex.validation.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,9 +19,11 @@ import java.util.List;
 @AllArgsConstructor
 public class DeviceMessage {
     @NotBlank
+    @ExistingDevice
     private String deviceId;
-    // TODO: 09.01.2020 Create validation for long timestamps
+    @Past
     private long measuredTime;
+    @Past
     private long receivedTime;
     @NotEmpty
     private List<Measurement> data;

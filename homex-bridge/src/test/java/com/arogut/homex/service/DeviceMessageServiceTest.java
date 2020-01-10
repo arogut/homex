@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
@@ -44,9 +43,7 @@ class DeviceMessageServiceTest {
                 ))
                 .build();
 
-        Mockito.when(deviceService.existsById(Mockito.any())).thenReturn(Mono.just(true));
-
-        deviceMessageServiceService.handle(msg).block();
+        deviceMessageServiceService.handle(msg);
 
         ArgumentCaptor<BatchPoints> pointsCaptor = ArgumentCaptor.forClass(BatchPoints.class);
         Mockito.verify(influxDB).write(pointsCaptor.capture());

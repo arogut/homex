@@ -34,7 +34,7 @@ class DeviceServiceTest {
     @Test
     void shouldReturnSingleDeviceById() {
         Device device = Device.builder().id("1").build();
-        Mockito.when(deviceRepository.findOneById(Mockito.anyString())).thenReturn(Optional.ofNullable(device));
+        Mockito.when(deviceRepository.findById(Mockito.anyString())).thenReturn(Optional.ofNullable(device));
 
         Assertions.assertThat(deviceService.getById("1").blockOptional()).isPresent();
         Assertions.assertThat(deviceService.getById("1").blockOptional()).contains(device);
