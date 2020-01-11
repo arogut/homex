@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>homex-bridge</module>
-		<module>homex-edge</module>
+		<module>homex-dummy-edge</module>
 	</modules>
     <packaging>pom</packaging>
 

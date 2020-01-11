@@ -1,0 +1,26 @@
+server:
+  port: 8081
+
+edge:
+  deviceId: "2e68220f-6fbb-446f-b2be-4c8264f957ec"
+  publishDelay: 10000
+  publishPeriod: 5000
+  contract:
+    measurements:
+      DOUBLE:
+        - name: "temperature"
+          min: 16.5
+          max: 26.5
+      INT:
+        - name: "humidity"
+          min: 0
+          max: 100
+
+bridge:
+  url: localhost:8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
