@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import javax.annotation.PostConstruct;
@@ -26,15 +25,10 @@ public class MeasurementPublisherService {
 
     @PostConstruct
     public void init() {
-        subscribeToMeasurementsFlow(Schedulers.newSingle("measurement-sender"));
+        measurementsFlow().subscribeOn(Schedulers.newSingle("measurement-sender"));
     }
 
-    public void subscribeToMeasurementsFlow(Scheduler scheduler) {
-        measurementsFlow()
-                .subscribeOn(scheduler);
-    }
-
-    private Flux<List<Measurement>> measurementsFlow() {
+    public Flux<List<Measurement>> measurementsFlow() {
         return Flux.interval(Duration.ofMillis(edgeProperties.getPublishDelay()), Duration.ofMillis(edgeProperties.getPublishPeriod()))
                 .map(l -> collectorService.getMeasurement())
                 .doOnNext(measurements -> {

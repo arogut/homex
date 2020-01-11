@@ -2,14 +2,12 @@ package com.arogut.homex.edge.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
 public class DeviceMessage {
     private String deviceId;
