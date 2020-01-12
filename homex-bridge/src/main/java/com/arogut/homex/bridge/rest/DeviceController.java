@@ -1,15 +1,21 @@
 package com.arogut.homex.bridge.rest;
 
+import com.arogut.homex.bridge.auth.JwtUtil;
+import com.arogut.homex.bridge.auth.RegistrationResponse;
 import com.arogut.homex.bridge.model.Device;
 import com.arogut.homex.bridge.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/devices")
@@ -17,15 +23,20 @@ import java.net.URI;
 public class DeviceController {
 
     private final DeviceService deviceService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping
-    public Mono<ResponseEntity<Void>> addDevice(@Valid @RequestBody Device device) {
-        return Mono.just(ResponseEntity.created(URI.create("/devices/" + deviceService.add(device).block())).build());
+    public Mono<ResponseEntity<RegistrationResponse>> register(@Valid @RequestBody Device device) {
+        return deviceService.add(device)
+                .map(d -> RegistrationResponse.builder()
+                        .deviceId(d.getId())
+                        .token(jwtUtil.generateToken(d)).build())
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping
-    public Mono<ServerResponse> getDevices() {
-        return ServerResponse.ok().body(deviceService.getAll(), Device.class);
+    public Flux<Device> getDevices() {
+        return deviceService.getAll();
     }
 
     @GetMapping("/{id}")

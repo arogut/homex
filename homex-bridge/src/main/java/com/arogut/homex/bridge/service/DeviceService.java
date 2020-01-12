@@ -29,7 +29,7 @@ public class DeviceService {
         return Mono.just(deviceRepository.existsById(id));
     }
 
-    public Mono<String> add(Device device) {
-        return Mono.just(deviceRepository.save(device).getId());
+    public Mono<Device> add(Device device) {
+        return Mono.just(deviceRepository.save(device));
     }
 }

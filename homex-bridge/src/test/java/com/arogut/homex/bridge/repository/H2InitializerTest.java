@@ -24,7 +24,7 @@ public class H2InitializerTest {
 
     @Test
     void shouldCreateDummyDevice() {
-        Mockito.when(deviceService.add(Mockito.any(Device.class))).thenReturn(Mono.just("id"));
+        Mockito.when(deviceService.add(Mockito.any(Device.class))).thenAnswer(i -> Mono.just(i.getArgument(0)));
 
         h2Initializer.initializeDb();
 

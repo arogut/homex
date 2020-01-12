@@ -1,26 +1,31 @@
 package com.arogut.homex.bridge.rest;
 
-import com.arogut.homex.bridge.config.BridgeSecurityConfig;
+import com.arogut.homex.bridge.auth.JwtUtil;
+import com.arogut.homex.bridge.auth.RegistrationResponse;
 import com.arogut.homex.bridge.model.Device;
 import com.arogut.homex.bridge.model.DeviceType;
 import com.arogut.homex.bridge.service.DeviceService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DeviceController.class, BridgeSecurityConfig.class})
-@WebFluxTest
+@SpringBootTest
+@AutoConfigureWebTestClient
+@ActiveProfiles("test")
 class DeviceControllerTest {
 
     @MockBean
@@ -29,17 +34,39 @@ class DeviceControllerTest {
     @Autowired
     private WebTestClient webClient;
 
+    @SpyBean
+    private JwtUtil jwtUtil;
+
     @Test
-    @WithMockUser
     void shouldReturnDeviceAnd200OK() {
         Device dev = Device.builder().id("test").build();
+        String token = jwtUtil.generateToken(dev);
 
         Mockito.when(deviceService.getById("test")).thenReturn(Mono.just(dev));
+        Mockito.when(deviceService.existsById("test")).thenReturn(Mono.just(true));
 
         webClient.get()
                 .uri("/devices/test")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void shouldReturn401WhenTokenCorrupted() {
+        Device dev = Device.builder().id("test").build();
+        String token = jwtUtil.generateToken(dev);
+
+        Mockito.when(deviceService.getById("test")).thenReturn(Mono.just(dev));
+        Mockito.when(deviceService.existsById("test")).thenReturn(Mono.just(true));
+
+        Mockito.when(jwtUtil.getAllClaimsFromToken(token)).thenThrow(RuntimeException.class);
+
+        webClient.get()
+                .uri("/devices/test")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -65,7 +92,6 @@ class DeviceControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldAcceptDeviceAndReturn200OK() {
         Device device = Device.builder()
                 .id("dummy")
@@ -76,16 +102,19 @@ class DeviceControllerTest {
                 .port(999)
                 .build();
 
-        Mockito.when(deviceService.add(Mockito.any(Device.class))).thenReturn(Mono.just(device.getId()));
+        Mockito.when(deviceService.add(Mockito.any(Device.class))).thenReturn(Mono.just(device));
 
         webClient.post()
                 .uri("/devices")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
-                .expectStatus().isCreated()
-                .expectHeader().valueEquals("Location", "/devices/dummy")
-                .expectBody().isEmpty();
+                .expectStatus().isOk()
+                .expectBody(RegistrationResponse.class)
+                .value(registrationResponse -> {
+                    Assertions.assertThat(registrationResponse.getDeviceId()).isEqualTo(device.getId());
+                    Assertions.assertThat(registrationResponse.getToken()).isNotBlank();
+                });
     }
 
     @Test

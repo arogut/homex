@@ -45,7 +45,7 @@ class DeviceServiceTest {
         Device device = Device.builder().id("1").build();
         Mockito.when(deviceRepository.save(device)).thenReturn(device);
 
-        Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device.getId());
+        Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device);
     }
 
     @Test
