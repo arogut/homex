@@ -9,8 +9,8 @@ edge:
     measurements:
       DOUBLE:
         - name: "temperature"
-          min: 16.5
-          max: 26.5
+          min: 16
+          max: 26
       INT:
         - name: "humidity"
           min: 0
