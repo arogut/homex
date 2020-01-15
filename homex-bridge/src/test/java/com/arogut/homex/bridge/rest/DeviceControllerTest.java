@@ -1,7 +1,7 @@
 package com.arogut.homex.bridge.rest;
 
-import com.arogut.homex.bridge.auth.JwtUtil;
-import com.arogut.homex.bridge.auth.RegistrationResponse;
+import com.arogut.homex.bridge.config.auth.JwtUtil;
+import com.arogut.homex.bridge.model.AuthType;
 import com.arogut.homex.bridge.model.Device;
 import com.arogut.homex.bridge.model.DeviceType;
 import com.arogut.homex.bridge.service.DeviceService;
@@ -22,6 +22,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
@@ -40,7 +42,7 @@ class DeviceControllerTest {
     @Test
     void shouldReturnDeviceAnd200OK() {
         Device dev = Device.builder().id("test").build();
-        String token = jwtUtil.generateToken(dev);
+        String token = jwtUtil.generateToken(dev.getId(), Map.of("role", AuthType.INTERNAL));
 
         Mockito.when(deviceService.getById("test")).thenReturn(Mono.just(dev));
         Mockito.when(deviceService.existsById("test")).thenReturn(Mono.just(true));
@@ -55,12 +57,12 @@ class DeviceControllerTest {
     @Test
     void shouldReturn401WhenTokenCorrupted() {
         Device dev = Device.builder().id("test").build();
-        String token = jwtUtil.generateToken(dev);
+        String token = jwtUtil.generateToken(dev.getId(), Map.of("role", AuthType.INTERNAL));
 
         Mockito.when(deviceService.getById("test")).thenReturn(Mono.just(dev));
         Mockito.when(deviceService.existsById("test")).thenReturn(Mono.just(true));
 
-        Mockito.when(jwtUtil.getAllClaimsFromToken(token)).thenThrow(RuntimeException.class);
+        Mockito.when(jwtUtil.validateToken(token)).thenThrow(RuntimeException.class);
 
         webClient.get()
                 .uri("/devices/test")
@@ -92,6 +94,7 @@ class DeviceControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldAcceptDeviceAndReturn200OK() {
         Device device = Device.builder()
                 .id("dummy")
@@ -110,11 +113,8 @@ class DeviceControllerTest {
                 .body(Mono.just(device), Device.class)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(RegistrationResponse.class)
-                .value(registrationResponse -> {
-                    Assertions.assertThat(registrationResponse.getDeviceId()).isEqualTo(device.getId());
-                    Assertions.assertThat(registrationResponse.getToken()).isNotBlank();
-                });
+                .expectBody(Device.class)
+                .value(d -> Assertions.assertThat(d).isEqualTo(device));
     }
 
     @Test

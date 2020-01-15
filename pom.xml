@@ -9,6 +9,7 @@
     <modules>
         <module>homex-bridge</module>
 		<module>homex-dummy-edge</module>
+		<module>homex-gateway</module>
 	</modules>
     <packaging>pom</packaging>
 

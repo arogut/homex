@@ -2,6 +2,10 @@ coverage:
   status:
     patch: off
     project:
+      HomexGateway:
+        paths:
+          - "homex-gateway/"
+        target: 85%
       HomexBridge:
         paths:
           - "homex-bridge/"

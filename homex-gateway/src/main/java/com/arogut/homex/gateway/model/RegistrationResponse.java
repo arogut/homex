@@ -1,4 +1,4 @@
-package com.arogut.homex.bridge.auth;
+package com.arogut.homex.gateway.model;
 
 import lombok.Builder;
 import lombok.Getter;

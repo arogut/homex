@@ -1,9 +1,7 @@
-package com.arogut.homex.bridge.config;
+package com.arogut.homex.gateway.config;
 
-import com.arogut.homex.bridge.config.auth.AuthenticationManager;
-import com.arogut.homex.bridge.config.auth.SecurityContextRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -17,7 +15,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-public class BridgeSecurityConfig implements WebFluxConfigurer {
+public class AuthSecurityConfig implements WebFluxConfigurer {
 
     private static final String[] AUTH_WHITELIST = {
             // -- swagger ui
@@ -31,12 +29,6 @@ public class BridgeSecurityConfig implements WebFluxConfigurer {
             "/actuator/**"
     };
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private SecurityContextRepository securityContextRepository;
-
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http) {
         return http
@@ -45,14 +37,13 @@ public class BridgeSecurityConfig implements WebFluxConfigurer {
                 .and()
                 .authorizeExchange()
                 .pathMatchers(AUTH_WHITELIST).permitAll()
+                .pathMatchers(HttpMethod.POST, "/devices/register").permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .httpBasic()
                 .and()
                 .cors()
                 .disable()
-                .authenticationManager(authenticationManager)
-                .securityContextRepository(securityContextRepository)
                 .csrf()
                 .disable()
                 .build();

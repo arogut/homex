@@ -1,4 +1,4 @@
-package com.arogut.homex.bridge.auth;
+package com.arogut.homex.bridge.config.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
