@@ -26,7 +26,7 @@ public class FeignClientJwtInterceptor implements ReactiveHttpRequestInterceptor
     @Override
     public ReactiveHttpRequest apply(ReactiveHttpRequest reactiveHttpRequest) {
         if(jwtUtil.isTokenExpired(token)) {
-
+            updateToken();
         }
         reactiveHttpRequest.headers().put("Authorization", List.of("Bearer " + token));
         return reactiveHttpRequest;
