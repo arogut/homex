@@ -29,7 +29,7 @@ public class RegistrationController {
         return registrationService.register(device)
                 .map(d -> RegistrationResponse.builder()
                         .deviceId(d.getId())
-                        .token(jwtUtil.generateToken(d.getId(), Map.of("type", AuthType.DEVICE)))
+                        .token(jwtUtil.generateToken(d.getId(), Map.of("role", AuthType.DEVICE)))
                         .build())
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.badRequest().build());

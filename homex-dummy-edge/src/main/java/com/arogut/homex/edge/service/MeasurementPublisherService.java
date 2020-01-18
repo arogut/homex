@@ -1,6 +1,7 @@
 package com.arogut.homex.edge.service;
 
-import com.arogut.homex.edge.client.BridgeClient;
+import com.arogut.homex.edge.client.AuthorizedGatewayClient;
+import com.arogut.homex.edge.config.properties.ContractProperties;
 import com.arogut.homex.edge.config.properties.EdgeProperties;
 import com.arogut.homex.edge.model.DeviceMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,9 @@ import java.time.Duration;
 public class MeasurementPublisherService {
 
     private final EdgeProperties edgeProperties;
+    private final ContractProperties contractProperties;
     private final MeasurementCollectorService collectorService;
-    private final BridgeClient bridgeClient;
+    private final AuthorizedGatewayClient authorizedGatewayClient;
 
     @PostConstruct
     public void init() {
@@ -29,11 +31,11 @@ public class MeasurementPublisherService {
         return Flux.interval(Duration.ofMillis(edgeProperties.getPublishDelay()), Duration.ofMillis(edgeProperties.getPublishPeriod()))
                 .map(l -> collectorService.getMeasurement())
                 .map(m -> DeviceMessage.builder()
-                        .deviceId(edgeProperties.getDeviceId())
+                        .deviceId(contractProperties.getDevice().getId())
                         .measuredTime(System.currentTimeMillis())
                         .data(m)
                         .build())
-                .flatMap(bridgeClient::sendMessage)
+                .flatMap(authorizedGatewayClient::sendMessage)
                 .onErrorContinue((e,o) -> log.warn("Unable to send measurements: {}", e.getMessage()));
     }
 }

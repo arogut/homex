@@ -77,26 +77,4 @@ public class DeviceMessageControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
-
-    @Test
-    @WithMockUser
-    void shouldNotAcceptMessageFromInvalidSourceAndReturn400() {
-        DeviceMessage msg = DeviceMessage.builder()
-                .deviceId("dummy")
-                .measuredTime(Instant.now().toEpochMilli())
-                .receivedTime(Instant.now().toEpochMilli())
-                .data(List.of(Measurement.builder()
-                        .name("temp")
-                        .value(25).build()
-                ))
-                .build();
-
-        Mockito.when(deviceRepository.existsById("dummy")).thenReturn(false);
-
-        webClient.post()
-                .uri("/devices/message")
-                .body(Mono.just(msg), DeviceMessage.class)
-                .exchange()
-                .expectStatus().isBadRequest();
-    }
 }

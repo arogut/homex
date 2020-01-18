@@ -8,8 +8,8 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
-@ReactiveFeignClient(name = "BridgeClient", url="${bridge.url}")
-public interface BridgeClient {
+@ReactiveFeignClient(name = "AuthorizedGatewayClient", url="${gateway.url}", configuration = FeignClientJwtInterceptor.class)
+public interface AuthorizedGatewayClient {
 
     @PostMapping("/devices/message")
     Mono<String> sendMessage(@Valid @RequestBody DeviceMessage message);

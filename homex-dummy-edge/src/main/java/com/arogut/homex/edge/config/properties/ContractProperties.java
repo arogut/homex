@@ -15,5 +15,6 @@ import java.util.Map;
 @Getter
 @Setter
 public class ContractProperties {
+    private DeviceProperties device;
     private Map<MeasurementType, List<NumberMeasurement>> measurements;
 }

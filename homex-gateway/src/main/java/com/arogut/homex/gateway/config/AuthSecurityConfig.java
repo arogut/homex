@@ -38,7 +38,7 @@ public class AuthSecurityConfig implements WebFluxConfigurer {
                 .authorizeExchange()
                 .pathMatchers(AUTH_WHITELIST).permitAll()
                 .pathMatchers(HttpMethod.POST, "/devices/register").permitAll()
-                .anyExchange().authenticated()
+                .anyExchange().permitAll()
                 .and()
                 .httpBasic()
                 .and()

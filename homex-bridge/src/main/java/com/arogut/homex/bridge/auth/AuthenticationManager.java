@@ -1,4 +1,4 @@
-package com.arogut.homex.bridge.config.auth;
+package com.arogut.homex.bridge.auth;
 
 import com.arogut.homex.bridge.model.AuthType;
 import com.arogut.homex.bridge.service.DeviceService;

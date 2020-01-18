@@ -26,8 +26,8 @@ public class JwtUtil {
         final Date createdDate = new Date();
         final Date expirationDate = new Date(createdDate.getTime() + expirationTimeLong * 1000);
         return Jwts.builder()
-                .setSubject(deviceId)
                 .setClaims(claims)
+                .setSubject(deviceId)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
                 .signWith(new SecretKeySpec(Base64.getEncoder().encode(secret.getBytes()),

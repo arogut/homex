@@ -1,7 +1,7 @@
 package com.arogut.homex.bridge.config;
 
-import com.arogut.homex.bridge.config.auth.AuthenticationManager;
-import com.arogut.homex.bridge.config.auth.SecurityContextRepository;
+import com.arogut.homex.bridge.auth.AuthenticationManager;
+import com.arogut.homex.bridge.auth.SecurityContextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;

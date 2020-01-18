@@ -1,6 +1,6 @@
 package com.arogut.homex.bridge.rest;
 
-import com.arogut.homex.bridge.config.auth.JwtUtil;
+import com.arogut.homex.bridge.auth.JwtUtil;
 import com.arogut.homex.bridge.model.AuthType;
 import com.arogut.homex.bridge.model.Device;
 import com.arogut.homex.bridge.model.DeviceType;
