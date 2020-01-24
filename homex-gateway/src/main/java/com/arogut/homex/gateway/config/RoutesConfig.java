@@ -13,7 +13,7 @@ public class RoutesConfig {
         return builder.routes()
                 .route("devices-message", r -> r.path("/devices/message")
                         .uri("http://localhost:8082"))
-                .route("devices-register", r -> r.path("/devices/register")
+                .route("devices-register", r -> r.path("/devices/auth")
                         .uri("no://op"))
                 .build();
     }

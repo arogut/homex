@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class EdgeProperties {
-    private String deviceId;
     private long publishDelay;
     private long publishPeriod;
 }

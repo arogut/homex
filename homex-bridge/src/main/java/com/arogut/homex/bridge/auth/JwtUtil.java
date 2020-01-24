@@ -1,6 +1,5 @@
 package com.arogut.homex.bridge.auth;
 
-import com.arogut.homex.bridge.model.AuthType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -17,6 +17,7 @@
         <java.version>11</java.version>
 
         <feign-reactor.version>1.0.44</feign-reactor.version>
+        <jwt.version>0.10.7</jwt.version>
         <assertj.version>3.12.2</assertj.version>
         <junit.jupiter.version>5.4.1</junit.jupiter.version>
         <junit.platform.version>1.4.1</junit.platform.version>
@@ -53,6 +54,11 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jwt.version}</version>
         </dependency>
 
         <!-- TEST DEPENDENCIES -->

@@ -8,6 +8,6 @@ import lombok.Getter;
 public class RegistrationResponse {
 
     private String deviceId;
-
     private String token;
+    private long expiration;
 }

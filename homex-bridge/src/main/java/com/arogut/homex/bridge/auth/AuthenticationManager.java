@@ -1,6 +1,5 @@
 package com.arogut.homex.bridge.auth;
 
-import com.arogut.homex.bridge.model.AuthType;
 import com.arogut.homex.bridge.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;

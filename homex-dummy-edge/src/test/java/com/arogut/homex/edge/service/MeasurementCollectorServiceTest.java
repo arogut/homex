@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
-public class MeasurementCollectorServiceTest {
+class MeasurementCollectorServiceTest {
 
     private ContractProperties contractProperties = new ContractProperties();
 

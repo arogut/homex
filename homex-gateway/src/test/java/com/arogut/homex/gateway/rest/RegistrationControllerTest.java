@@ -1,6 +1,7 @@
 package com.arogut.homex.gateway.rest;
 
 import com.arogut.homex.gateway.JwtUtil;
+import com.arogut.homex.gateway.model.AuthType;
 import com.arogut.homex.gateway.model.Device;
 import com.arogut.homex.gateway.model.DeviceType;
 import com.arogut.homex.gateway.model.RegistrationResponse;
@@ -20,6 +21,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -50,7 +53,7 @@ class RegistrationControllerTest {
         Mockito.when(registrationService.register(Mockito.any(Device.class))).thenReturn(Mono.just(device));
 
         webClient.post()
-                .uri("/devices/register")
+                .uri("/devices/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
@@ -73,10 +76,34 @@ class RegistrationControllerTest {
                 .build();
 
         webClient.post()
-                .uri("/devices/register")
+                .uri("/devices/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void shouldRefreshTokenForDevice() {
+        String token = jwtUtil.generateToken("dummy", Map.of("role", AuthType.DEVICE));
+
+        webClient.get()
+                .uri("/devices/auth/refresh")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(RegistrationResponse.class)
+                .value(registrationResponse -> {
+                    Assertions.assertThat(registrationResponse.getDeviceId()).isEqualTo("dummy");
+                    Assertions.assertThat(registrationResponse.getToken()).isNotEmpty();
+                });
+    }
+
+    @Test
+    void refreshTokenEndpointShouldBeSecured() {
+        webClient.get()
+                .uri("/devices/auth/refresh")
+                .exchange()
+                .expectStatus().isUnauthorized();
     }
 }

@@ -1,10 +1,10 @@
 package com.arogut.homex.edge.service;
 
 import com.arogut.homex.edge.client.AuthorizedGatewayClient;
-import com.arogut.homex.edge.config.properties.ContractProperties;
 import com.arogut.homex.edge.config.properties.DeviceProperties;
 import com.arogut.homex.edge.config.properties.EdgeProperties;
 import com.arogut.homex.edge.model.DeviceMessage;
+import com.arogut.homex.edge.model.RegistrationDetails;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import java.time.Duration;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
-public class MeasurementPublisherServiceTest {
+class MeasurementPublisherServiceTest {
 
     @Mock
     private MeasurementCollectorService collectorService;
@@ -30,13 +30,16 @@ public class MeasurementPublisherServiceTest {
 
     private EdgeProperties edgeProperties = new EdgeProperties();
 
-    private ContractProperties contractProperties = new ContractProperties();
+    private DeviceProperties deviceProperties = new DeviceProperties();
+
+    private RegistrationDetails registrationDetails = new RegistrationDetails();
 
     private MeasurementPublisherService publisherService;
 
     @BeforeEach
     void setUp() {
-        publisherService = new MeasurementPublisherService(edgeProperties, contractProperties, collectorService, authorizedGatewayClient);
+        publisherService = new MeasurementPublisherService(edgeProperties, deviceProperties, collectorService,
+                authorizedGatewayClient, registrationDetails);
     }
 
     @Test
@@ -44,7 +47,8 @@ public class MeasurementPublisherServiceTest {
         String uuid = UUID.randomUUID().toString();
         edgeProperties.setPublishDelay(1000);
         edgeProperties.setPublishPeriod(5000);
-        contractProperties.setDevice(DeviceProperties.builder().id(uuid).build());
+        deviceProperties.setId(uuid);
+        registrationDetails.setAuthorized(true);
 
         Mockito.when(authorizedGatewayClient.sendMessage(Mockito.any(DeviceMessage.class))).thenReturn(Mono.just("1"), Mono.just("2"));
 

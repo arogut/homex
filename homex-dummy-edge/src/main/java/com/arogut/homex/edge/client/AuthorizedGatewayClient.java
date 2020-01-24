@@ -1,6 +1,8 @@
 package com.arogut.homex.edge.client;
 
 import com.arogut.homex.edge.model.DeviceMessage;
+import com.arogut.homex.edge.model.RegistrationResponse;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactivefeign.spring.config.ReactiveFeignClient;
@@ -13,4 +15,7 @@ public interface AuthorizedGatewayClient {
 
     @PostMapping("/devices/message")
     Mono<String> sendMessage(@Valid @RequestBody DeviceMessage message);
+
+    @GetMapping("/devices/auth/refresh")
+    Mono<RegistrationResponse> refresh();
 }

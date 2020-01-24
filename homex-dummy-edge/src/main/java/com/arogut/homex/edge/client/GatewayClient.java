@@ -12,6 +12,6 @@ import javax.validation.Valid;
 @ReactiveFeignClient(name = "GatewayClient", url="${gateway.url}")
 public interface GatewayClient {
 
-    @PostMapping("/devices/register")
+    @PostMapping("/devices/auth")
     Mono<RegistrationResponse> register(@Valid @RequestBody DeviceProperties device);
 }

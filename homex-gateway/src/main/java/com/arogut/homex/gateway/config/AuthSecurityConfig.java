@@ -1,7 +1,6 @@
 package com.arogut.homex.gateway.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -37,7 +36,7 @@ public class AuthSecurityConfig implements WebFluxConfigurer {
                 .and()
                 .authorizeExchange()
                 .pathMatchers(AUTH_WHITELIST).permitAll()
-                .pathMatchers(HttpMethod.POST, "/devices/register").permitAll()
+                .pathMatchers("/devices/auth/**").permitAll()
                 .anyExchange().permitAll()
                 .and()
                 .httpBasic()
