@@ -6,9 +6,9 @@ coverage:
         paths:
           - "homex-gateway/"
         target: 85%
-      HomexBridge:
+      HomexData:
         paths:
-          - "homex-bridge/"
+          - "homex-data/"
         target: 85%
       HomexDummyEdge:
         paths:

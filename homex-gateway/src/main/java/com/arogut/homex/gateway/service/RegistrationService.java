@@ -1,6 +1,6 @@
 package com.arogut.homex.gateway.service;
 
-import com.arogut.homex.gateway.client.BridgeClient;
+import com.arogut.homex.gateway.client.DataClient;
 import com.arogut.homex.gateway.model.Device;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +12,9 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class RegistrationService {
 
-    private final BridgeClient bridgeClient;
+    private final DataClient dataClient;
 
     public Mono<Device> register(Device device) {
-        return bridgeClient.register(device);
+        return dataClient.register(device);
     }
 }

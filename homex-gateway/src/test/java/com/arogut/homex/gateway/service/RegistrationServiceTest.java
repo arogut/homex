@@ -1,6 +1,6 @@
 package com.arogut.homex.gateway.service;
 
-import com.arogut.homex.gateway.client.BridgeClient;
+import com.arogut.homex.gateway.client.DataClient;
 import com.arogut.homex.gateway.model.Device;
 import com.arogut.homex.gateway.model.DeviceType;
 import org.assertj.core.api.Assertions;
@@ -16,13 +16,13 @@ import reactor.core.publisher.Mono;
 class RegistrationServiceTest {
 
     @Mock
-    private BridgeClient bridgeClient;
+    private DataClient dataClient;
 
     @InjectMocks
     private RegistrationService registrationService;
 
     @Test
-    void shouldProperlyCallBridgeToAddDevice() {
+    void shouldProperlyCallDataToAddDevice() {
         Device device = Device.builder()
                 .id("dummy")
                 .name("dummy")
@@ -32,7 +32,7 @@ class RegistrationServiceTest {
                 .port(999)
                 .build();
 
-        Mockito.when(bridgeClient.register(Mockito.any(Device.class)))
+        Mockito.when(dataClient.register(Mockito.any(Device.class)))
                 .thenReturn(Mono.just(device));
 
         Assertions.assertThat(registrationService.register(device).block()).isEqualTo(device);
