@@ -5,5 +5,4 @@ sudo: false
 script: mvn clean verify
 
 after_success:
-  - bash -c "ls */target/site/jacoco/jacoco.xml"
-  - bash <(curl -s https://codecov.io/bash) -F unittests -f */target/site/jacoco/jacoco.xml -t a00c4d12-594b-4ddc-ad5a-1b9fc85f0a01
+  - bash <(curl -s https://codecov.io/bash) -t a00c4d12-594b-4ddc-ad5a-1b9fc85f0a01
