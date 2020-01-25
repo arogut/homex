@@ -2,6 +2,8 @@ package com.arogut.homex.edge.config.properties;
 
 import com.arogut.homex.edge.model.DeviceType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,6 +16,8 @@ import javax.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "edge.contract.device")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Component
 public class DeviceProperties {
 
