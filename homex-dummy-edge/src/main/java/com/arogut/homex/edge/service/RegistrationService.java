@@ -32,7 +32,10 @@ public class RegistrationService {
     public Flux<RegistrationResponse> register() {
         return Flux.from(gatewayClient.register(deviceProperties))
                 .retryBackoff(100, Duration.ofMillis(1000), Duration.ofMillis(10000))
-                .doOnNext(this::updateRegistrationDetails);
+                .doOnNext(response -> {
+                    updateRegistrationDetails(response);
+                    log.info("Registered with id: {}", response.getDeviceId());
+                });
     }
 
     public Flux<RegistrationResponse> scheduledRefresh(Duration duration) {

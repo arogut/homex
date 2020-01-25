@@ -41,9 +41,17 @@ class DeviceServiceTest {
     }
 
     @Test
-    void shouldSuccessfullyAddDevice() {
+    void shouldSuccessfullyAddNewDevice() {
         Device device = Device.builder().id("1").build();
         Mockito.when(deviceRepository.save(device)).thenReturn(device);
+
+        Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device);
+    }
+
+    @Test
+    void shouldReturnDeviceIfSameMacAddress() {
+        Device device = Device.builder().id("1").macAddress("dummy").build();
+        Mockito.when(deviceRepository.findByMacAddress("dummy")).thenReturn(Optional.of(device));
 
         Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device);
     }

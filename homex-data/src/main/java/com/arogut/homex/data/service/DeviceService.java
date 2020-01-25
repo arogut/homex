@@ -30,6 +30,7 @@ public class DeviceService {
     }
 
     public Mono<Device> add(Device device) {
-        return Mono.just(deviceRepository.save(device));
+        return Mono.just(deviceRepository.findByMacAddress(device.getMacAddress())
+                .orElse(deviceRepository.save(device)));
     }
 }

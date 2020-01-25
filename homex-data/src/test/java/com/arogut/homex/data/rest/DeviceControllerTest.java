@@ -100,6 +100,7 @@ class DeviceControllerTest {
                 .id("dummy")
                 .name("dummy")
                 .isConnected(true)
+                .macAddress("dummy")
                 .deviceType(DeviceType.SOURCE)
                 .host("localhost")
                 .port(999)

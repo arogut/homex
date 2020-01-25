@@ -28,6 +28,9 @@ public class Device {
     private String id;
     @Column
     @NotEmpty
+    private String macAddress;
+    @Column
+    @NotEmpty
     private String name;
     @Enumerated
     @NotNull

@@ -18,6 +18,8 @@ public class Device {
 
     private String id;
     @NotEmpty
+    private String macAddress;
+    @NotEmpty
     private String name;
     @NotNull
     private DeviceType deviceType;
