@@ -1,7 +1,7 @@
-package com.arogut.homex.data.rest;
+package com.arogut.homex.data.api;
 
-import com.arogut.homex.data.auth.JwtUtil;
 import com.arogut.homex.data.auth.AuthType;
+import com.arogut.homex.data.auth.JwtUtil;
 import com.arogut.homex.data.model.Device;
 import com.arogut.homex.data.model.DeviceType;
 import com.arogut.homex.data.service.DeviceService;

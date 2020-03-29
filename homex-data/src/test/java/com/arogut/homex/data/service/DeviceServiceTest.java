@@ -1,11 +1,14 @@
 package com.arogut.homex.data.service;
 
+import com.arogut.homex.data.dao.DeviceEntity;
+import com.arogut.homex.data.dao.DeviceRepository;
+import com.arogut.homex.data.mapper.DeviceMapper;
 import com.arogut.homex.data.model.Device;
-import com.arogut.homex.data.repository.DeviceRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 class DeviceServiceTest {
@@ -20,21 +24,31 @@ class DeviceServiceTest {
     @Mock
     private DeviceRepository deviceRepository;
 
-    @InjectMocks
+    private DeviceMapper mapper = Mappers.getMapper(DeviceMapper.class);
+
     private DeviceService deviceService;
+
+    @BeforeEach
+    void setUp() {
+        deviceService = new DeviceService(deviceRepository, mapper);
+    }
 
     @Test
     void shouldReturnAllDevicesFromDB() {
-        List<Device> devices = Arrays.asList(Device.builder().build(), Device.builder().build());
-        Mockito.when(deviceRepository.findAll()).thenReturn(devices);
+        List<DeviceEntity> entities = Arrays.asList(DeviceEntity.builder().build(), DeviceEntity.builder().build());
+        List<Device> devices = entities.stream()
+                .map(mapper::toDevice)
+                .collect(Collectors.toList());
+        Mockito.when(deviceRepository.findAll()).thenReturn(entities);
 
         Assertions.assertThat(deviceService.getAll().collectList().block()).containsExactlyElementsOf(devices);
     }
 
     @Test
     void shouldReturnSingleDeviceById() {
-        Device device = Device.builder().id("1").build();
-        Mockito.when(deviceRepository.findById(Mockito.anyString())).thenReturn(Optional.ofNullable(device));
+        DeviceEntity entity = DeviceEntity.builder().id("1").build();
+        Device device = mapper.toDevice(entity);
+        Mockito.when(deviceRepository.findById(Mockito.anyString())).thenReturn(Optional.ofNullable(entity));
 
         Assertions.assertThat(deviceService.getById("1").blockOptional()).isPresent();
         Assertions.assertThat(deviceService.getById("1").blockOptional()).contains(device);
@@ -42,16 +56,18 @@ class DeviceServiceTest {
 
     @Test
     void shouldSuccessfullyAddNewDevice() {
-        Device device = Device.builder().id("1").build();
-        Mockito.when(deviceRepository.save(device)).thenReturn(device);
+        DeviceEntity entity = DeviceEntity.builder().id("1").build();
+        Device device = mapper.toDevice(entity);
+        Mockito.when(deviceRepository.save(entity)).thenReturn(entity);
 
         Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device);
     }
 
     @Test
     void shouldReturnDeviceIfSameMacAddress() {
-        Device device = Device.builder().id("1").macAddress("dummy").build();
-        Mockito.when(deviceRepository.findByMacAddress("dummy")).thenReturn(Optional.of(device));
+        DeviceEntity entity = DeviceEntity.builder().id("1").macAddress("dummy").build();
+        Device device = mapper.toDevice(entity);
+        Mockito.when(deviceRepository.findByMacAddress("dummy")).thenReturn(Optional.of(entity));
 
         Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device);
     }

@@ -1,4 +1,4 @@
-package com.arogut.homex.data.rest;
+package com.arogut.homex.data.api;
 
 import com.arogut.homex.data.model.Device;
 import com.arogut.homex.data.service.DeviceService;

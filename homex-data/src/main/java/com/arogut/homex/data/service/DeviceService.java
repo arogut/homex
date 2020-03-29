@@ -1,28 +1,30 @@
 package com.arogut.homex.data.service;
 
-import com.arogut.homex.data.repository.DeviceRepository;
+import com.arogut.homex.data.dao.DeviceEntity;
+import com.arogut.homex.data.dao.DeviceRepository;
+import com.arogut.homex.data.mapper.DeviceMapper;
 import com.arogut.homex.data.model.Device;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@RequiredArgsConstructor
 public class DeviceService {
 
     private final DeviceRepository deviceRepository;
 
-    @Autowired
-    public DeviceService(DeviceRepository deviceRepository) {
-        this.deviceRepository = deviceRepository;
-    }
+    private final DeviceMapper deviceMapper;
 
     public Flux<Device> getAll() {
-        return Flux.fromIterable(deviceRepository.findAll());
+        return Flux.fromIterable(deviceRepository.findAll())
+                .map(deviceMapper::toDevice);
     }
 
     public Mono<Device> getById(String id) {
-        return Mono.justOrEmpty(deviceRepository.findById(id));
+        return Mono.justOrEmpty(deviceRepository.findById(id))
+                .map(deviceMapper::toDevice);
     }
 
     public Mono<Boolean> existsById(String id) {
@@ -31,6 +33,11 @@ public class DeviceService {
 
     public Mono<Device> add(Device device) {
         return Mono.just(deviceRepository.findByMacAddress(device.getMacAddress())
-                .orElse(deviceRepository.save(device)));
+                .map(deviceMapper::toDevice)
+                .orElseGet(() -> deviceMapper.toDevice(create(device))));
+    }
+
+    private DeviceEntity create(Device device) {
+        return deviceRepository.save(deviceMapper.toEntity(device));
     }
 }

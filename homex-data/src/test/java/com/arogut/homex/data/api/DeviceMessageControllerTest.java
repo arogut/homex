@@ -1,7 +1,7 @@
-package com.arogut.homex.data.rest;
+package com.arogut.homex.data.api;
 
 import com.arogut.homex.data.model.DeviceMessage;
-import com.arogut.homex.data.repository.DeviceRepository;
+import com.arogut.homex.data.dao.DeviceRepository;
 import com.arogut.homex.data.service.DeviceMessageService;
 import com.arogut.homex.data.model.Measurement;
 import org.junit.jupiter.api.Test;
