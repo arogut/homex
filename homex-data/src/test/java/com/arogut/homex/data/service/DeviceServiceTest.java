@@ -46,7 +46,8 @@ class DeviceServiceTest {
 
     @Test
     void shouldReturnSingleDeviceById() {
-        DeviceEntity entity = DeviceEntity.builder().id("1").build();
+        DeviceEntity entity = DeviceEntity.builder()
+                .build();
         Device device = mapper.toDevice(entity);
         Mockito.when(deviceRepository.findById(Mockito.anyString())).thenReturn(Optional.ofNullable(entity));
 
@@ -56,7 +57,8 @@ class DeviceServiceTest {
 
     @Test
     void shouldSuccessfullyAddNewDevice() {
-        DeviceEntity entity = DeviceEntity.builder().id("1").build();
+        DeviceEntity entity = DeviceEntity.builder()
+                .build();
         Device device = mapper.toDevice(entity);
         Mockito.when(deviceRepository.save(entity)).thenReturn(entity);
 

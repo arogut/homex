@@ -6,20 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class DeviceMessage {
-    @NotBlank
-    private String deviceId;
+public class MeasurementMessage {
+
     @Past
     private long measuredTime;
+
     private long receivedTime = System.currentTimeMillis();
+
     @NotEmpty
-    private List<Measurement> data;
+    private List<@Valid MeasurementValue> data;
 }

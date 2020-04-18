@@ -1,28 +1,23 @@
-package com.arogut.homex.data.model;
+package com.arogut.homex.gateway.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Measurement {
 
-    private String id;
-
-    @Column
-    @NotEmpty
+    @NotNull
     private String name;
 
-    @Enumerated
     @NotNull
     private ValueType type;
 }

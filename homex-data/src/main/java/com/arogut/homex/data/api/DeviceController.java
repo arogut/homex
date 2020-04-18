@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/devices")
+@RequestMapping("/device")
 @RequiredArgsConstructor
 public class DeviceController {
 

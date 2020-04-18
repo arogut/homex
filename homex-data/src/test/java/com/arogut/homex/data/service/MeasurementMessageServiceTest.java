@@ -1,7 +1,7 @@
 package com.arogut.homex.data.service;
 
-import com.arogut.homex.data.model.DeviceMessage;
-import com.arogut.homex.data.model.Measurement;
+import com.arogut.homex.data.model.MeasurementMessage;
+import com.arogut.homex.data.model.MeasurementValue;
 import org.assertj.core.api.Assertions;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.BatchPoints;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @ExtendWith(MockitoExtension.class)
-class DeviceMessageServiceTest {
+class MeasurementMessageServiceTest {
 
     @Mock
     private InfluxDB influxDB;
@@ -29,21 +29,20 @@ class DeviceMessageServiceTest {
     private DeviceService deviceService;
 
     @InjectMocks
-    private DeviceMessageService deviceMessageServiceService;
+    private DeviceMessageService deviceMessageService;
 
     @Test
     void shouldAcceptDeviceMessage() {
-        DeviceMessage msg = DeviceMessage.builder()
-                .deviceId("dummy")
+        MeasurementMessage msg = MeasurementMessage.builder()
                 .measuredTime(Instant.now().toEpochMilli())
                 .receivedTime(Instant.now().toEpochMilli())
-                .data(List.of(Measurement.builder()
+                .data(List.of(MeasurementValue.builder()
                         .name("temp")
                         .value(25L).build()
                 ))
                 .build();
 
-        deviceMessageServiceService.handle(msg);
+        deviceMessageService.handleMeasurement("dummy", msg);
 
         ArgumentCaptor<BatchPoints> pointsCaptor = ArgumentCaptor.forClass(BatchPoints.class);
         Mockito.verify(influxDB).write(pointsCaptor.capture());

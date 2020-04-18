@@ -16,11 +16,11 @@ import reactor.core.publisher.Mono;
 public class SecurityContextRepository implements ServerSecurityContextRepository {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private JwtAuthenticationManager jwtAuthenticationManager;
 
     @Override
     public Mono<Void> save(ServerWebExchange swe, SecurityContext sc) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Mono.empty();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String authToken = authHeader.substring(7);
             Authentication auth = new UsernamePasswordAuthenticationToken(authToken, authToken);
-            return this.authenticationManager.authenticate(auth)
+            return this.jwtAuthenticationManager.authenticate(auth)
                     .map(SecurityContextImpl::new);
         } else {
             return Mono.empty();

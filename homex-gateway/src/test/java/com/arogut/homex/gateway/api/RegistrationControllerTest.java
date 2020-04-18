@@ -1,11 +1,17 @@
-package com.arogut.homex.gateway.rest;
+package com.arogut.homex.gateway.api;
 
 import com.arogut.homex.gateway.JwtUtil;
+import com.arogut.homex.gateway.client.DataClient;
 import com.arogut.homex.gateway.model.AuthType;
+import com.arogut.homex.gateway.model.Command;
+import com.arogut.homex.gateway.model.Contract;
 import com.arogut.homex.gateway.model.Device;
+import com.arogut.homex.gateway.model.DeviceMetadata;
 import com.arogut.homex.gateway.model.DeviceType;
+import com.arogut.homex.gateway.model.Measurement;
+import com.arogut.homex.gateway.model.RegistrationRequest;
 import com.arogut.homex.gateway.model.RegistrationResponse;
-import com.arogut.homex.gateway.service.RegistrationService;
+import com.arogut.homex.gateway.model.ValueType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +29,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -30,17 +37,36 @@ import java.util.Map;
 @ActiveProfiles("test")
 class RegistrationControllerTest {
 
-    @MockBean
-    private RegistrationService registrationService;
-
     @Autowired
     private WebTestClient webClient;
+
+    @MockBean
+    private DataClient dataClient;
 
     @SpyBean
     private JwtUtil jwtUtil;
 
     @Test
     void shouldRegisterDeviceAndReturn200OK() {
+        RegistrationRequest request = RegistrationRequest.builder()
+                .metadata(DeviceMetadata.builder()
+                        .macAddress("mac-address")
+                        .name("dummy")
+                        .host("localhost")
+                        .port(999)
+                        .build())
+                .contract(Contract.builder()
+                        .measurements(Set.of(Measurement.builder()
+                                .name("temp")
+                                .type(ValueType.NUMBER)
+                                .build()))
+                        .commands(Set.of(Command.builder()
+                                .name("turn-off")
+                                .endpoint("/turn-off")
+                                .params(Set.of())
+                                .build()))
+                        .build())
+                .build();
         Device device = Device.builder()
                 .id("dummy")
                 .name("dummy")
@@ -50,13 +76,12 @@ class RegistrationControllerTest {
                 .host("localhost")
                 .port(999)
                 .build();
-
-        Mockito.when(registrationService.register(Mockito.any(Device.class))).thenReturn(Mono.just(device));
+        Mockito.when(dataClient.register(Mockito.any(Device.class))).thenReturn(Mono.just(device));
 
         webClient.post()
-                .uri("/devices/auth")
+                .uri("/device/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(device), Device.class)
+                .body(Mono.just(request), RegistrationRequest.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(RegistrationResponse.class)
@@ -69,17 +94,26 @@ class RegistrationControllerTest {
     @Test
     @WithMockUser
     void shouldNotAcceptDeviceAndReturn400() {
-        Device device = Device.builder()
-                .isConnected(true)
-                .deviceType(DeviceType.SOURCE)
-                .host("localhost")
-                .port(999)
+        RegistrationRequest request = RegistrationRequest.builder()
+                .metadata(DeviceMetadata.builder()
+                        .port(999)
+                        .build())
+                .contract(Contract.builder()
+                        .measurements(Set.of(Measurement.builder()
+                                .name("temp")
+                                .type(ValueType.NUMBER)
+                                .build()))
+                        .commands(Set.of(Command.builder()
+                                .name("turn-off")
+                                .params(Set.of())
+                                .build()))
+                        .build())
                 .build();
 
         webClient.post()
-                .uri("/devices/auth")
+                .uri("/device/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(device), Device.class)
+                .body(Mono.just(request), RegistrationRequest.class)
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -89,7 +123,7 @@ class RegistrationControllerTest {
         String token = jwtUtil.generateToken("dummy", Map.of("role", AuthType.DEVICE));
 
         webClient.get()
-                .uri("/devices/auth/refresh")
+                .uri("/device/auth/refresh")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
@@ -103,7 +137,7 @@ class RegistrationControllerTest {
     @Test
     void refreshTokenEndpointShouldBeSecured() {
         webClient.get()
-                .uri("/devices/auth/refresh")
+                .uri("/device/auth/refresh")
                 .exchange()
                 .expectStatus().isUnauthorized();
     }

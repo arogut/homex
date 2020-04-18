@@ -1,14 +1,17 @@
 package com.arogut.homex.edge.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 public class NumberMeasurement extends Measurement {
+
         private int min;
         private int max;
 }

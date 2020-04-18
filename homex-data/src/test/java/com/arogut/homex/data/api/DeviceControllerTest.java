@@ -2,8 +2,12 @@ package com.arogut.homex.data.api;
 
 import com.arogut.homex.data.auth.AuthType;
 import com.arogut.homex.data.auth.JwtUtil;
+import com.arogut.homex.data.model.Command;
+import com.arogut.homex.data.model.CommandParam;
 import com.arogut.homex.data.model.Device;
 import com.arogut.homex.data.model.DeviceType;
+import com.arogut.homex.data.model.Measurement;
+import com.arogut.homex.data.model.ValueType;
 import com.arogut.homex.data.service.DeviceService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,17 +16,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -30,7 +33,7 @@ import java.util.Map;
 @ActiveProfiles("test")
 class DeviceControllerTest {
 
-    @MockBean
+    @Autowired
     private DeviceService deviceService;
 
     @Autowired
@@ -41,31 +44,39 @@ class DeviceControllerTest {
 
     @Test
     void shouldReturnDeviceAnd200OK() {
-        Device dev = Device.builder().id("test").build();
-        String token = jwtUtil.generateToken(dev.getId(), Map.of("role", AuthType.INTERNAL));
-
-        Mockito.when(deviceService.getById("test")).thenReturn(Mono.just(dev));
-        Mockito.when(deviceService.existsById("test")).thenReturn(Mono.just(true));
+        Device device = createDevice();
+        Device saved = deviceService.add(device).block();
+        String token = jwtUtil.generateToken(device.getId(), Map.of("role", AuthType.INTERNAL));
 
         webClient.get()
-                .uri("/devices/test")
+                .uri("/device/" + saved.getId())
                 .header("Authorization", "Bearer " + token)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody(Device.class)
+                .value(d -> {
+                    Assertions.assertThat(d.getId()).isNotEmpty();
+                    Assertions.assertThat(d.getMacAddress()).isEqualTo("dummy");
+                    Assertions.assertThat(d.getName()).isEqualTo("dummy");
+                    Assertions.assertThat(d.getDeviceType()).isEqualTo(DeviceType.SOURCE);
+                    Assertions.assertThat(d.getHost()).isEqualTo("localhost");
+                    Assertions.assertThat(d.getPort()).isEqualTo(999);
+                    Assertions.assertThat(d.getMeasurements().size()).isEqualTo(1);
+                    Assertions.assertThat(d.getCommands().size()).isEqualTo(1);
+                });
     }
 
     @Test
     void shouldReturn401WhenTokenCorrupted() {
-        Device dev = Device.builder().id("test").build();
-        String token = jwtUtil.generateToken(dev.getId(), Map.of("role", AuthType.INTERNAL));
-
-        Mockito.when(deviceService.getById("test")).thenReturn(Mono.just(dev));
-        Mockito.when(deviceService.existsById("test")).thenReturn(Mono.just(true));
+        Device device = Device.builder()
+                .id("test")
+                .build();
+        String token = jwtUtil.generateToken(device.getId(), Map.of("role", AuthType.INTERNAL));
 
         Mockito.when(jwtUtil.validateToken(token)).thenThrow(RuntimeException.class);
 
         webClient.get()
-                .uri("/devices/test")
+                .uri("/device/test")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -74,10 +85,8 @@ class DeviceControllerTest {
     @Test
     @WithMockUser
     void shouldReturn404NotFoundWhenNotExists() {
-        Mockito.when(deviceService.getById("test12")).thenReturn(Mono.empty());
-
         webClient.get()
-                .uri("/devices/test12")
+                .uri("/device/test12")
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -85,10 +94,8 @@ class DeviceControllerTest {
     @Test
     @WithMockUser
     void shouldReturnDevicesAnd200OK() {
-        Mockito.when(deviceService.getAll()).thenReturn(Flux.empty());
-
         webClient.get()
-                .uri("/devices")
+                .uri("/device")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -96,26 +103,25 @@ class DeviceControllerTest {
     @Test
     @WithMockUser
     void shouldAcceptDeviceAndReturn200OK() {
-        Device device = Device.builder()
-                .id("dummy")
-                .name("dummy")
-                .isConnected(true)
-                .macAddress("dummy")
-                .deviceType(DeviceType.SOURCE)
-                .host("localhost")
-                .port(999)
-                .build();
-
-        Mockito.when(deviceService.add(Mockito.any(Device.class))).thenReturn(Mono.just(device));
+        Device device = createDevice();
 
         webClient.post()
-                .uri("/devices")
+                .uri("/device")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Device.class)
-                .value(d -> Assertions.assertThat(d).isEqualTo(device));
+                .value(d -> {
+                    Assertions.assertThat(d.getId()).isNotEmpty();
+                    Assertions.assertThat(d.getMacAddress()).isEqualTo("dummy");
+                    Assertions.assertThat(d.getName()).isEqualTo("dummy");
+                    Assertions.assertThat(d.getDeviceType()).isEqualTo(DeviceType.SOURCE);
+                    Assertions.assertThat(d.getHost()).isEqualTo("localhost");
+                    Assertions.assertThat(d.getPort()).isEqualTo(999);
+                    Assertions.assertThat(d.getMeasurements()).isNull();
+                    Assertions.assertThat(d.getCommands()).isNull();
+                });
     }
 
     @Test
@@ -129,10 +135,42 @@ class DeviceControllerTest {
                 .build();
 
         webClient.post()
-                .uri("/devices")
+                .uri("/device")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    private Device createDevice() {
+        return Device.builder()
+                .id("dummy")
+                .name("dummy")
+                .isConnected(true)
+                .macAddress("dummy")
+                .deviceType(DeviceType.SOURCE)
+                .host("localhost")
+                .port(999)
+                .measurements(Set.of(createMeasurement()))
+                .commands(Set.of(createCommand()))
+                .build();
+    }
+
+    private Measurement createMeasurement() {
+        return Measurement.builder()
+                .name("temp")
+                .type(ValueType.NUMBER)
+                .build();
+    }
+
+    private Command createCommand() {
+        return Command.builder()
+                .name("turn-off")
+                .endpoint("/turn-off")
+                .params(Set.of(CommandParam.builder()
+                        .name("time")
+                        .type(ValueType.STRING)
+                        .build()))
+                .build();
     }
 }

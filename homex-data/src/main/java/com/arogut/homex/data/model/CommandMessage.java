@@ -5,24 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Measurement {
+public class CommandMessage {
 
-    private String id;
-
-    @Column
     @NotEmpty
     private String name;
 
-    @Enumerated
-    @NotNull
-    private ValueType type;
+    private Set<@Valid CommandParam> params;
 }

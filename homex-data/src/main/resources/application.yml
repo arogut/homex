@@ -21,6 +21,10 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  security:
+    user:
+      name: admin
+      password: "{noop}admin"
 
 jwt:
   expiration: 600000

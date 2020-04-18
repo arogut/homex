@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AuthenticationManager implements ReactiveAuthenticationManager {
+public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
 
     private final JwtUtil jwtUtil;
     private final DeviceService deviceService;
@@ -25,12 +25,12 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                 .map(jwtUtil::getSubjectAndType)
                 .onErrorResume(e -> Mono.empty())
                 .flatMap(pair -> {
-                    if(pair.getAuthType().equals(AuthType.INTERNAL)) {
+                    if(AuthType.INTERNAL.equals(pair.getAuthType())) {
                         return internalAuth(pair.getSubject());
-                    } else if (pair.getAuthType().equals(AuthType.DEVICE)) {
+                    } else if (AuthType.DEVICE.equals(pair.getAuthType())) {
                         return deviceAuth(pair.getSubject());
                     } else {
-                        throw new IllegalArgumentException("Wrong auth type");
+                        return Mono.empty();
                     }
                 })
                 .switchIfEmpty(Mono.empty());

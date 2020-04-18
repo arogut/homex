@@ -2,12 +2,15 @@ package com.arogut.homex.data.service;
 
 import com.arogut.homex.data.dao.DeviceEntity;
 import com.arogut.homex.data.dao.DeviceRepository;
+import com.arogut.homex.data.dao.JpaChild;
 import com.arogut.homex.data.mapper.DeviceMapper;
 import com.arogut.homex.data.model.Device;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,7 @@ public class DeviceService {
 
     public Mono<Device> getById(String id) {
         return Mono.justOrEmpty(deviceRepository.findById(id))
-                .map(deviceMapper::toDevice);
+                .map(deviceMapper::toDeviceWithChildren);
     }
 
     public Mono<Boolean> existsById(String id) {
@@ -38,6 +41,26 @@ public class DeviceService {
     }
 
     private DeviceEntity create(Device device) {
-        return deviceRepository.save(deviceMapper.toEntity(device));
+        return deviceRepository.save(prepareSave(deviceMapper.toEntity(device)));
+    }
+
+    private DeviceEntity prepareSave(final DeviceEntity deviceEntity) {
+
+        setUpParent(deviceEntity, deviceEntity.getMeasurements());
+        setUpParent(deviceEntity, deviceEntity.getCommands());
+        if (deviceEntity.getCommands() != null) {
+            deviceEntity.getCommands()
+                    .forEach(commandEntity -> setUpParent(commandEntity, commandEntity.getParams()));
+        }
+        return deviceEntity;
+    }
+
+    private <T> void setUpParent(T parent, Set<? extends JpaChild<T>> deviceChildren) {
+        if (null != deviceChildren) {
+            deviceChildren.forEach(measurement -> {
+                measurement.setId(null);
+                measurement.setParent(parent);
+            });
+        }
     }
 }

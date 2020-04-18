@@ -14,14 +14,18 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
 
-    @Value("${jwt.expiration}")
-    private String expirationTime;
+    private final String expiration;
+
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration}") String expiration) {
+        this.secret = secret;
+        this.expiration = expiration;
+    }
 
     public String generateToken(String deviceId, Map<String, Object> claims) {
-        long expirationTimeLong = Long.parseLong(expirationTime); //in second
+        long expirationTimeLong = Long.parseLong(expiration); //in second
 
         final Date createdDate = new Date();
         final Date expirationDate = new Date(createdDate.getTime() + expirationTimeLong * 1000);
@@ -50,4 +54,7 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
+    public String getExpiration() {
+        return expiration;
+    }
 }

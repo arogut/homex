@@ -1,10 +1,10 @@
 package com.arogut.homex.gateway.model;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
+@Data
 @Builder
-@Getter
 public class RegistrationResponse {
 
     private String deviceId;

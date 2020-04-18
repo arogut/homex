@@ -1,9 +1,9 @@
 package com.arogut.homex.data.api;
 
-import com.arogut.homex.data.model.DeviceMessage;
+import com.arogut.homex.data.model.MeasurementMessage;
 import com.arogut.homex.data.dao.DeviceRepository;
 import com.arogut.homex.data.service.DeviceMessageService;
-import com.arogut.homex.data.model.Measurement;
+import com.arogut.homex.data.model.MeasurementValue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -25,7 +25,7 @@ import java.util.List;
 @SpringBootTest
 @AutoConfigureWebTestClient
 @ActiveProfiles("test")
-public class DeviceMessageControllerTest {
+public class MeasurementMessageControllerTest {
 
     @MockBean
     private DeviceMessageService deviceMessageService;
@@ -39,23 +39,15 @@ public class DeviceMessageControllerTest {
     @Test
     @WithMockUser
     void shouldAcceptMessageAndReturn200OK() {
-        DeviceMessage msg = DeviceMessage.builder()
-                .deviceId("dummy")
-                .measuredTime(Instant.now().toEpochMilli())
-                .receivedTime(Instant.now().toEpochMilli())
-                .data(List.of(Measurement.builder()
-                        .name("temp")
-                        .value(25).build()
-                ))
-                .build();
+        var msg = createMessage();
 
         Mockito.when(deviceRepository.existsById("dummy")).thenReturn(true);
 
         webClient.post()
-                .uri("/devices/message")
+                .uri("/device/dummy/measurement")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(msg), DeviceMessage.class)
+                .body(Mono.just(msg), MeasurementMessage.class)
                 .exchange()
                 .expectStatus().isAccepted()
                 .expectBody().isEmpty();
@@ -64,17 +56,24 @@ public class DeviceMessageControllerTest {
     @Test
     @WithMockUser
     void shouldNotAcceptInvalidMessageAndReturn400() {
-        DeviceMessage msg = DeviceMessage.builder()
-                .deviceId("dummy")
-                .measuredTime(Instant.now().toEpochMilli())
-                .receivedTime(Instant.now().toEpochMilli())
-                .data(List.of())
-                .build();
+        var msg = createMessage();
+        msg.setData(null);
 
         webClient.post()
-                .uri("/devices/message")
-                .body(Mono.just(msg), DeviceMessage.class)
+                .uri("/device/dummy/measurement")
+                .body(Mono.just(msg), MeasurementMessage.class)
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    private MeasurementMessage createMessage() {
+        return MeasurementMessage.builder()
+                .measuredTime(Instant.now().toEpochMilli())
+                .receivedTime(Instant.now().toEpochMilli())
+                .data(List.of(MeasurementValue.builder()
+                        .name("temp")
+                        .value(25).build()
+                ))
+                .build();
     }
 }
