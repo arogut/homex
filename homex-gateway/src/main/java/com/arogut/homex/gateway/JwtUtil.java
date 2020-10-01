@@ -40,18 +40,21 @@ public class JwtUtil {
     }
 
     public Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(new SecretKeySpec(Base64.getEncoder().encode(secret.getBytes()),
-                SignatureAlgorithm.HS512.getJcaName()))
-                .parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(new SecretKeySpec(Base64.getEncoder().encode(secret.getBytes()), SignatureAlgorithm.HS512.getJcaName()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Date getExpirationDateFromToken(String token) {
-        return getAllClaimsFromToken(token).getExpiration();
+        return getAllClaimsFromToken(token)
+                .getExpiration();
     }
 
     public boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        final Date exp = getExpirationDateFromToken(token);
+        return exp.before(new Date());
     }
 
     public String getExpiration() {

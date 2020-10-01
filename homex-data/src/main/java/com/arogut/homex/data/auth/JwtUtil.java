@@ -3,6 +3,7 @@ package com.arogut.homex.data.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultJwtParserBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,12 @@ public class JwtUtil {
     private String expirationTime;
 
     public Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(new SecretKeySpec(Base64.getEncoder().encode(secret.getBytes()),
-                SignatureAlgorithm.HS512.getJcaName()))
-                .parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(new SecretKeySpec(Base64.getEncoder().encode(secret.getBytes()),
+                        SignatureAlgorithm.HS512.getJcaName()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Date getExpirationDateFromToken(String token) {

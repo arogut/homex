@@ -5,6 +5,6 @@ import lombok.Value;
 @Value
 public class SubjectAuthTypePair {
 
-    private String subject;
-    private AuthType authType;
+    String subject;
+    AuthType authType;
 }

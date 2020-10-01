@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.validation.ConstraintValidatorContext;
 
 @ExtendWith(MockitoExtension.class)
-public class PastValidatorTest {
+class PastValidatorTest {
 
     @Mock
     private ConstraintValidatorContext context;
