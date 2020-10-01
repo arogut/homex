@@ -1,9 +1,9 @@
 package com.arogut.homex.data.api;
 
-import com.arogut.homex.data.model.MeasurementMessage;
 import com.arogut.homex.data.dao.DeviceRepository;
-import com.arogut.homex.data.service.DeviceMessageService;
+import com.arogut.homex.data.model.MeasurementMessage;
 import com.arogut.homex.data.model.MeasurementValue;
+import com.arogut.homex.data.service.DeviceMessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -24,8 +23,7 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
-@ActiveProfiles("test")
-public class MeasurementMessageControllerTest {
+class MeasurementMessageControllerTest {
 
     @MockBean
     private DeviceMessageService deviceMessageService;

@@ -37,11 +37,12 @@ public class DeviceService {
     public Mono<Device> add(Device device) {
         return Mono.just(deviceRepository.findByMacAddress(device.getMacAddress())
                 .map(deviceMapper::toDevice)
-                .orElseGet(() -> deviceMapper.toDevice(create(device))));
+                .orElseGet(() -> create(device)));
     }
 
-    private DeviceEntity create(Device device) {
-        return deviceRepository.save(prepareSave(deviceMapper.toEntity(device)));
+    private Device create(Device device) {
+        DeviceEntity deviceEntity = prepareSave(deviceMapper.toEntity(device));
+        return deviceMapper.toDevice(deviceRepository.save(deviceEntity));
     }
 
     private DeviceEntity prepareSave(final DeviceEntity deviceEntity) {

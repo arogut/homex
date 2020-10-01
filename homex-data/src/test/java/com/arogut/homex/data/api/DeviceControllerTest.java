@@ -2,12 +2,7 @@ package com.arogut.homex.data.api;
 
 import com.arogut.homex.data.auth.AuthType;
 import com.arogut.homex.data.auth.JwtUtil;
-import com.arogut.homex.data.model.Command;
-import com.arogut.homex.data.model.CommandParam;
-import com.arogut.homex.data.model.Device;
-import com.arogut.homex.data.model.DeviceType;
-import com.arogut.homex.data.model.Measurement;
-import com.arogut.homex.data.model.ValueType;
+import com.arogut.homex.data.model.*;
 import com.arogut.homex.data.service.DeviceService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -30,7 +24,6 @@ import java.util.Set;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
-@ActiveProfiles("test")
 class DeviceControllerTest {
 
     @Autowired

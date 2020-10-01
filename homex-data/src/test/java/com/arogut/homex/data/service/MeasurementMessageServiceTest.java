@@ -18,7 +18,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
 @ExtendWith(MockitoExtension.class)
 class MeasurementMessageServiceTest {
 

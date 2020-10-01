@@ -31,7 +31,8 @@ public class DeviceMessageService {
     }
 
     private void persist(String deviceId, List<MeasurementValue> measurements, long measuredTime) {
-        BatchPoints.Builder batchPoints = BatchPoints.builder().tag("deviceId", deviceId);
+        BatchPoints.Builder batchPoints = BatchPoints.builder()
+                .tag("deviceId", deviceId);
         measurements.forEach(m -> batchPoints.point(Point.measurement("measurement")
                 .addField(m.getName(), m.getValue())
                 .time(measuredTime, TimeUnit.MILLISECONDS)

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactivefeign.client.ReactiveHttpRequest;
 import reactivefeign.client.ReactiveHttpRequestInterceptor;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -23,16 +24,16 @@ public class FeignClientJwtInterceptor implements ReactiveHttpRequestInterceptor
         updateToken();
     }
 
+    private void updateToken() {
+        this.token = jwtUtil.generateToken("gateway", Map.of("role", AuthType.INTERNAL));
+    }
+
     @Override
-    public ReactiveHttpRequest apply(ReactiveHttpRequest reactiveHttpRequest) {
+    public Mono<ReactiveHttpRequest> apply(ReactiveHttpRequest reactiveHttpRequest) {
         if(jwtUtil.isTokenExpired(token)) {
             updateToken();
         }
         reactiveHttpRequest.headers().put("Authorization", List.of("Bearer " + token));
-        return reactiveHttpRequest;
-    }
-
-    private void updateToken() {
-        this.token = jwtUtil.generateToken("gateway", Map.of("role", AuthType.INTERNAL));
+        return Mono.just(reactiveHttpRequest);
     }
 }
