@@ -4,6 +4,7 @@ import com.arogut.homex.data.dao.DeviceEntity;
 import com.arogut.homex.data.dao.DeviceRepository;
 import com.arogut.homex.data.dao.JpaChild;
 import com.arogut.homex.data.mapper.DeviceMapper;
+import com.arogut.homex.data.model.Contract;
 import com.arogut.homex.data.model.Device;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,10 @@ public class DeviceService {
     }
 
     public Mono<Device> add(Device device) {
-        return Mono.just(deviceRepository.findByMacAddress(device.getMacAddress())
+
+        return Mono.just(deviceRepository.findByMacAddressAndName(device.getMacAddress(), device.getName())
                 .map(deviceMapper::toDevice)
+                .map(d -> updateContract(d, device.getContract()))
                 .orElseGet(() -> create(device)));
     }
 
@@ -56,7 +59,15 @@ public class DeviceService {
         return deviceEntity;
     }
 
-    private <T> void setUpParent(T parent, Set<? extends JpaChild<T>> deviceChildren) {
+    private Device updateContract(final Device device, final Contract contract) {
+        if (!device.getContract().equals(contract)) {
+            device.setContract(contract);
+            deviceRepository.save(prepareSave(deviceMapper.toEntity(device)));
+        }
+        return device;
+    }
+
+    private <T> void setUpParent(final T parent, final Set<? extends JpaChild<T>> deviceChildren) {
         if (null != deviceChildren) {
             deviceChildren.forEach(measurement -> {
                 measurement.setId(null);

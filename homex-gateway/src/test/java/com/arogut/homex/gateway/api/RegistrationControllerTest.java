@@ -79,7 +79,7 @@ class RegistrationControllerTest {
         Mockito.when(dataClient.register(Mockito.any(Device.class))).thenReturn(Mono.just(device));
 
         webClient.post()
-                .uri("/device/auth")
+                .uri("/devices/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), RegistrationRequest.class)
                 .exchange()
@@ -111,7 +111,7 @@ class RegistrationControllerTest {
                 .build();
 
         webClient.post()
-                .uri("/device/auth")
+                .uri("/devices/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), RegistrationRequest.class)
                 .exchange()
@@ -123,7 +123,7 @@ class RegistrationControllerTest {
         String token = jwtUtil.generateToken("dummy", Map.of("role", AuthType.DEVICE));
 
         webClient.get()
-                .uri("/device/auth/refresh")
+                .uri("/devices/auth/refresh")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
@@ -137,7 +137,7 @@ class RegistrationControllerTest {
     @Test
     void refreshTokenEndpointShouldBeSecured() {
         webClient.get()
-                .uri("/device/auth/refresh")
+                .uri("/devices/auth/refresh")
                 .exchange()
                 .expectStatus().isUnauthorized();
     }

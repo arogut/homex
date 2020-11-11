@@ -1,27 +1,29 @@
 server:
-  port: 8081
+  port: 8082
+  error:
+    includeBindingErrors: ALWAYS
 
 edge:
+  deviceMetadata:
+    name: dummy-edge
+    host: localhost
+    port: ${server.port}
+  contract:
+    measurements:
+      - name: "temperature"
+        min: 16
+        max: 26
+        type: NUMBER
+      - name: "humidity"
+        min: 0
+        max: 100
+        type: NUMBER
+    commands:
   publishDelay: 10000
   publishPeriod: 5000
-  contract:
-    device:
-      name: dummy-edge
-      deviceType: SOURCE
-      host: localhost
-      port: ${server.port}
-    measurements:
-      DOUBLE:
-        - name: "temperature"
-          min: 16
-          max: 26
-      INT:
-        - name: "humidity"
-          min: 0
-          max: 100
 
 gateway:
-  url: localhost:8080
+  url: localhost:8081
 
 management:
   endpoints:

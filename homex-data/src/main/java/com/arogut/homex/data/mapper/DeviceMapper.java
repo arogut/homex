@@ -9,11 +9,13 @@ import org.mapstruct.Mapping;
 public interface DeviceMapper {
 
     @Mapping(ignore = true, target = "id")
+    @Mapping(target = ".", source = "contract")
     DeviceEntity toEntity(Device device);
 
-    @Mapping(target = "measurements", ignore = true)
-    @Mapping(target = "commands", ignore = true)
+    @Mapping(target = "contract.measurements", ignore = true)
+    @Mapping(target = "contract.commands", ignore = true)
     Device toDevice(DeviceEntity entity);
 
+    @Mapping(target = "contract", source = ".")
     Device toDeviceWithChildren(DeviceEntity entity);
 }

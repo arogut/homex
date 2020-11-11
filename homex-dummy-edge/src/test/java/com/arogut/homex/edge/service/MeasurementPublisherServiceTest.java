@@ -1,9 +1,9 @@
 package com.arogut.homex.edge.service;
 
-import com.arogut.homex.edge.client.AuthorizedGatewayClient;
-import com.arogut.homex.edge.config.properties.DeviceProperties;
 import com.arogut.homex.edge.config.properties.EdgeProperties;
+import com.arogut.homex.edge.model.Contract;
 import com.arogut.homex.edge.model.DeviceMessage;
+import com.arogut.homex.edge.model.DeviceMetadata;
 import com.arogut.homex.edge.model.RegistrationDetails;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,24 +22,22 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 class MeasurementPublisherServiceTest {
 
+    private final EdgeProperties edgeProperties = new EdgeProperties(new DeviceMetadata(), new Contract());
+
+    private final RegistrationDetails registrationDetails = new RegistrationDetails();
+
     @Mock
     private MeasurementCollectorService collectorService;
 
     @Mock
-    private AuthorizedGatewayClient authorizedGatewayClient;
-
-    private EdgeProperties edgeProperties = new EdgeProperties();
-
-    private DeviceProperties deviceProperties = new DeviceProperties();
-
-    private RegistrationDetails registrationDetails = new RegistrationDetails();
+    private GatewayService gatewayService;
 
     private MeasurementPublisherService publisherService;
 
     @BeforeEach
     void setUp() {
-        publisherService = new MeasurementPublisherService(edgeProperties, deviceProperties, collectorService,
-                authorizedGatewayClient, registrationDetails);
+        publisherService = new MeasurementPublisherService(edgeProperties, collectorService,
+                gatewayService, registrationDetails);
     }
 
     @Test
@@ -47,10 +45,10 @@ class MeasurementPublisherServiceTest {
         String uuid = UUID.randomUUID().toString();
         edgeProperties.setPublishDelay(1000);
         edgeProperties.setPublishPeriod(5000);
-        deviceProperties.setId(uuid);
+        edgeProperties.getDeviceMetadata().setId(uuid);
         registrationDetails.setAuthorized(true);
 
-        Mockito.when(authorizedGatewayClient.sendMessage(Mockito.any(DeviceMessage.class))).thenReturn(Mono.just("1"), Mono.just("2"));
+        Mockito.when(gatewayService.sendMessage(Mockito.any(DeviceMessage.class))).thenReturn(Mono.just("1"), Mono.just("2"));
 
         StepVerifier.withVirtualTime(() -> publisherService.measurementsFlow())
                 .expectSubscription()
@@ -69,7 +67,7 @@ class MeasurementPublisherServiceTest {
     private void assertNext(int order, String deviceId, String returnedValue) {
         ArgumentCaptor<DeviceMessage> deviceMessageCaptor = ArgumentCaptor.forClass(DeviceMessage.class);
         Mockito.verify(collectorService, Mockito.times(order)).getMeasurement();
-        Mockito.verify(authorizedGatewayClient, Mockito.times(order)).sendMessage(deviceMessageCaptor.capture());
+        Mockito.verify(gatewayService, Mockito.times(order)).sendMessage(deviceMessageCaptor.capture());
         DeviceMessage sentMessage = deviceMessageCaptor.getValue();
         Assertions.assertAll(
                 () -> Assertions.assertEquals(deviceId, sentMessage.getDeviceId()),

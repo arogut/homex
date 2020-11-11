@@ -1,17 +1,13 @@
 package com.arogut.homex.edge.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
+import lombok.Value;
 
-import javax.validation.constraints.NotNull;
+@Value
+@Builder
+public class Measurement<T> {
 
-@Data
-@SuperBuilder
-@NoArgsConstructor
-public class Measurement {
-    @NotNull
-    private String name;
-    @NotNull
-    private Number value;
+    String name;
+
+    T value;
 }

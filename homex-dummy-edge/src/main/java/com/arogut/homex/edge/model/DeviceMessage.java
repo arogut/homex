@@ -2,15 +2,17 @@ package com.arogut.homex.edge.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.List;
 
-@AllArgsConstructor
-@Getter
+
+@Value
 @Builder
+@AllArgsConstructor
 public class DeviceMessage {
-    private String deviceId;
-    private long measuredTime;
-    private List<Measurement> data;
+
+    String deviceId;
+    long measuredTime;
+    List<Measurement<?>> data;
 }

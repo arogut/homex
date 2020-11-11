@@ -1,8 +1,10 @@
 server:
   port: 8080
+  error:
+    includeBindingErrors: ALWAYS
 
 data:
-  url: localhost:8082
+  url: http://homex-data:8080
 
 jwt:
   expiration: 600000

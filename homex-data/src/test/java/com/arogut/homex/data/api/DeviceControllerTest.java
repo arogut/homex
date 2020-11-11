@@ -5,12 +5,14 @@ import com.arogut.homex.data.auth.JwtUtil;
 import com.arogut.homex.data.model.*;
 import com.arogut.homex.data.service.DeviceService;
 import org.assertj.core.api.Assertions;
+import org.influxdb.InfluxDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -35,6 +37,9 @@ class DeviceControllerTest {
     @SpyBean
     private JwtUtil jwtUtil;
 
+    @MockBean
+    private InfluxDB influxDB;
+
     @Test
     void shouldReturnDeviceAnd200OK() {
         Device device = createDevice();
@@ -42,7 +47,7 @@ class DeviceControllerTest {
         String token = jwtUtil.generateToken(device.getId(), Map.of("role", AuthType.INTERNAL));
 
         webClient.get()
-                .uri("/device/" + saved.getId())
+                .uri("/devices/" + saved.getId())
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
@@ -54,8 +59,8 @@ class DeviceControllerTest {
                     Assertions.assertThat(d.getDeviceType()).isEqualTo(DeviceType.SOURCE);
                     Assertions.assertThat(d.getHost()).isEqualTo("localhost");
                     Assertions.assertThat(d.getPort()).isEqualTo(999);
-                    Assertions.assertThat(d.getMeasurements().size()).isEqualTo(1);
-                    Assertions.assertThat(d.getCommands().size()).isEqualTo(1);
+                    Assertions.assertThat(d.getContract().getMeasurements().size()).isEqualTo(1);
+                    Assertions.assertThat(d.getContract().getCommands().size()).isEqualTo(1);
                 });
     }
 
@@ -69,7 +74,7 @@ class DeviceControllerTest {
         Mockito.when(jwtUtil.validateToken(token)).thenThrow(RuntimeException.class);
 
         webClient.get()
-                .uri("/device/test")
+                .uri("/devices/test")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -88,7 +93,7 @@ class DeviceControllerTest {
     @WithMockUser
     void shouldReturnDevicesAnd200OK() {
         webClient.get()
-                .uri("/device")
+                .uri("/devices")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -99,7 +104,7 @@ class DeviceControllerTest {
         Device device = createDevice();
 
         webClient.post()
-                .uri("/device")
+                .uri("/devices")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
@@ -112,8 +117,6 @@ class DeviceControllerTest {
                     Assertions.assertThat(d.getDeviceType()).isEqualTo(DeviceType.SOURCE);
                     Assertions.assertThat(d.getHost()).isEqualTo("localhost");
                     Assertions.assertThat(d.getPort()).isEqualTo(999);
-                    Assertions.assertThat(d.getMeasurements()).isNull();
-                    Assertions.assertThat(d.getCommands()).isNull();
                 });
     }
 
@@ -128,7 +131,7 @@ class DeviceControllerTest {
                 .build();
 
         webClient.post()
-                .uri("/device")
+                .uri("/devices")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(device), Device.class)
                 .exchange()
@@ -144,8 +147,10 @@ class DeviceControllerTest {
                 .deviceType(DeviceType.SOURCE)
                 .host("localhost")
                 .port(999)
-                .measurements(Set.of(createMeasurement()))
-                .commands(Set.of(createCommand()))
+                .contract(Contract.builder()
+                        .measurements(Set.of(createMeasurement()))
+                        .commands(Set.of(createCommand()))
+                        .build())
                 .build();
     }
 

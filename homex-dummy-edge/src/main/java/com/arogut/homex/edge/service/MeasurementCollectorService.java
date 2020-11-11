@@ -1,33 +1,30 @@
 package com.arogut.homex.edge.service;
 
-import com.arogut.homex.edge.config.properties.ContractProperties;
+import com.arogut.homex.edge.config.properties.EdgeProperties;
+import com.arogut.homex.edge.model.Contract;
 import com.arogut.homex.edge.model.Measurement;
-import com.arogut.homex.edge.model.MeasurementType;
-import com.arogut.homex.edge.model.NumberMeasurement;
+import com.arogut.homex.edge.service.generator.Generators;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.AbstractMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MeasurementCollectorService {
-    private final ContractProperties contractProperties;
 
-    public List<Measurement> getMeasurement() {
-        return contractProperties.getMeasurements().entrySet()
+    private final EdgeProperties edgeProperties;
+
+    public List<Measurement<?>> getMeasurement() {
+        return edgeProperties.getContract().getMeasurements()
                 .stream()
-                .flatMap(e -> e.getValue().stream()
-                        .map(s -> new AbstractMap.SimpleImmutableEntry<>(e.getKey(), s)))
                 .map(this::generateValue)
                 .collect(Collectors.toList());
     }
 
-    private NumberMeasurement generateValue(Map.Entry<MeasurementType, NumberMeasurement> entry) {
-        return entry.getKey().getGenerator().generateValue(entry.getValue());
+    private Measurement<?> generateValue(Contract.Measurement measurement) {
+        return Generators.DoubleGenerator.get().generateValue(measurement);
     }
 
 }

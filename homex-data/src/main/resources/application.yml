@@ -1,5 +1,7 @@
 server:
   port: 8080
+  error:
+    includeBindingErrors: ALWAYS
 
 spring:
   profiles:
@@ -31,7 +33,7 @@ jwt:
   secret: 3FC5D3C8D03FC2AC2AC3BB0BA2CEB2B33C258CED644FC5798AB6960CAFBAD0A6
 
 influx:
-  url: http://localhost:8086
+  url: http://influxdb:8086
   user: admin
   password: admin
   database: measurement

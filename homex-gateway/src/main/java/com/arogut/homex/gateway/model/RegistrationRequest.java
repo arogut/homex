@@ -17,10 +17,10 @@ import javax.validation.constraints.NotNull;
 public class RegistrationRequest {
 
     @Valid
-    @NotNull
+    @NotNull(message = "{metadata.cannot.be.null}")
     private DeviceMetadata metadata;
 
     @Valid
-    @NotNull
+    @NotNull(message = "{contract.cannot.be.null}")
     private Contract contract;
 }

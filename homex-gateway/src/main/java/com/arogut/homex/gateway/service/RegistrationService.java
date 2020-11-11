@@ -3,6 +3,7 @@ package com.arogut.homex.gateway.service;
 import com.arogut.homex.gateway.JwtUtil;
 import com.arogut.homex.gateway.client.DataClient;
 import com.arogut.homex.gateway.model.AuthType;
+import com.arogut.homex.gateway.model.Contract;
 import com.arogut.homex.gateway.model.Device;
 import com.arogut.homex.gateway.model.DeviceType;
 import com.arogut.homex.gateway.model.RegistrationRequest;
@@ -42,8 +43,10 @@ public class RegistrationService {
                 .deviceType(DeviceType.SOURCE)
                 .host(registrationRequest.getMetadata().getHost())
                 .port(registrationRequest.getMetadata().getPort())
-                .measurements(registrationRequest.getContract().getMeasurements())
-                .commands(registrationRequest.getContract().getCommands())
+                .contract(Contract.builder()
+                        .measurements(registrationRequest.getContract().getMeasurements())
+                        .commands(registrationRequest.getContract().getCommands())
+                        .build())
                 .build();
     }
 

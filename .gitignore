@@ -100,3 +100,4 @@ buildNumber.properties
 # Container data
 /docker/grafana/data/
 /docker/influxdb/data/
+/docker/chronograf/data/

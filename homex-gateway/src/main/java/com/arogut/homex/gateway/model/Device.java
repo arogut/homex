@@ -39,7 +39,7 @@ public class Device {
     @Max(99999)
     private int port;
 
-    private Set<@Valid Measurement> measurements = new HashSet<>();
-
-    private Set<@Valid Command> commands = new HashSet<>();
+    @Valid
+    @NotNull
+    private Contract contract;
 }

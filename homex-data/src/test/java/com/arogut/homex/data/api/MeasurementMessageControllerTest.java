@@ -4,6 +4,7 @@ import com.arogut.homex.data.dao.DeviceRepository;
 import com.arogut.homex.data.model.MeasurementMessage;
 import com.arogut.homex.data.model.MeasurementValue;
 import com.arogut.homex.data.service.DeviceMessageService;
+import org.influxdb.InfluxDB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -31,6 +32,9 @@ class MeasurementMessageControllerTest {
     @MockBean
     private DeviceRepository deviceRepository;
 
+    @MockBean
+    private InfluxDB influxDB;
+
     @Autowired
     private WebTestClient webClient;
 
@@ -42,7 +46,7 @@ class MeasurementMessageControllerTest {
         Mockito.when(deviceRepository.existsById("dummy")).thenReturn(true);
 
         webClient.post()
-                .uri("/device/dummy/measurement")
+                .uri("/devices/dummy/measurement")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(msg), MeasurementMessage.class)
@@ -58,7 +62,7 @@ class MeasurementMessageControllerTest {
         msg.setData(null);
 
         webClient.post()
-                .uri("/device/dummy/measurement")
+                .uri("/devices/dummy/measurement")
                 .body(Mono.just(msg), MeasurementMessage.class)
                 .exchange()
                 .expectStatus().isBadRequest();

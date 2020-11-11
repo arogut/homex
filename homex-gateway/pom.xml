@@ -149,6 +149,10 @@
                 <configuration>
                     <to>
                         <image>registry.hub.docker.com/arogut/${artifactId}</image>
+                        <tags>
+                            <tag>${project.version}</tag>
+                            <tag>latest</tag>
+                        </tags>
                     </to>
                 </configuration>
             </plugin>

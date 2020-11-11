@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @ExtendWith(MockitoExtension.class)
 class DeviceServiceTest {
 
+    private final DeviceMapper mapper = Mappers.getMapper(DeviceMapper.class);
+
     @Mock
     private DeviceRepository deviceRepository;
-
-    private DeviceMapper mapper = Mappers.getMapper(DeviceMapper.class);
 
     private DeviceService deviceService;
 
@@ -67,9 +67,13 @@ class DeviceServiceTest {
 
     @Test
     void shouldReturnDeviceIfSameMacAddress() {
-        DeviceEntity entity = DeviceEntity.builder().id("1").macAddress("dummy").build();
+        DeviceEntity entity = DeviceEntity.builder()
+                .id("1")
+                .macAddress("dummy")
+                .name("dummy-name")
+                .build();
         Device device = mapper.toDevice(entity);
-        Mockito.when(deviceRepository.findByMacAddress("dummy")).thenReturn(Optional.of(entity));
+        Mockito.when(deviceRepository.findByMacAddressAndName(entity.getMacAddress(), entity.getName())).thenReturn(Optional.of(entity));
 
         Assertions.assertThat(deviceService.add(device).block()).isEqualTo(device);
     }
@@ -78,6 +82,6 @@ class DeviceServiceTest {
     void shouldReturnTrueWhenDeviceExists() {
         Mockito.when(deviceRepository.existsById(Mockito.anyString())).thenReturn(true);
 
-        Assertions.assertThat(deviceService.existsById("1").block()).isEqualTo(true);
+        Assertions.assertThat(deviceService.existsById("1").block()).isTrue();
     }
 }

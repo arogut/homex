@@ -1,5 +1,19 @@
 version: "3.7"
 services:
+  homex-data:
+    image: arogut/homex-data:latest
+    container_name: homex-data
+    ports:
+      - "8080:8080"
+    depends_on:
+      - influxdb
+  homex-gateway:
+    image: arogut/homex-gateway:latest
+    container_name: homex-gateway
+    ports:
+      - "8081:8080"
+    depends_on:
+      - homex-data
   influxdb:
     image: influxdb:latest
     container_name: influxdb
@@ -10,15 +24,26 @@ services:
     volumes:
       # Data persistency
       - ./influxdb/data:/var/lib/influxdb
-
+  chronograf:
+    image: chronograf:latest
+    container_name: chronograf
+    ports:
+      - '127.0.0.1:8888:8888'
+    volumes:
+      - ./chronograf/data:/var/lib/chronograf
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
       - "3000:3000"
     user: "0"
-    links:
+    depends_on:
       - influxdb
     volumes:
       # Data persistency
       - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/

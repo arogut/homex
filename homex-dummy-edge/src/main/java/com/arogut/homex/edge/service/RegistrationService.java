@@ -1,14 +1,14 @@
 package com.arogut.homex.edge.service;
 
-import com.arogut.homex.edge.client.AuthorizedGatewayClient;
-import com.arogut.homex.edge.client.GatewayClient;
-import com.arogut.homex.edge.config.properties.DeviceProperties;
+import com.arogut.homex.edge.config.properties.EdgeProperties;
 import com.arogut.homex.edge.model.RegistrationDetails;
+import com.arogut.homex.edge.model.RegistrationRequest;
 import com.arogut.homex.edge.model.RegistrationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import reactor.util.retry.Retry;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -20,18 +20,19 @@ import java.time.LocalDateTime;
 public class RegistrationService {
 
     private final RegistrationDetails registrationDetails;
-    private final GatewayClient gatewayClient;
-    private final AuthorizedGatewayClient authorizedGatewayClient;
-    private final DeviceProperties deviceProperties;
+    private final GatewayService gatewayService;
+    private final EdgeProperties edgeProperties;
 
     @PostConstruct
     public void setUp() {
-        register().flatMap(response -> scheduledRefresh(Duration.ofMillis(response.getExpiration() * 8 / 10))).subscribe();
+        register()
+                .flatMap(response -> scheduledRefresh(Duration.ofMillis(response.getExpiration() * 8 / 10)))
+                .subscribe();
     }
 
     public Flux<RegistrationResponse> register() {
-        return Flux.from(gatewayClient.register(deviceProperties))
-                .retryBackoff(100, Duration.ofMillis(1000), Duration.ofMillis(10000))
+        return Flux.from(gatewayService.register(RegistrationRequest.from(edgeProperties)))
+                .retryWhen(Retry.backoff(5, Duration.ofMillis(1000)))
                 .doOnNext(response -> {
                     updateRegistrationDetails(response);
                     log.info("Registered with id: {}", response.getDeviceId());
@@ -40,12 +41,12 @@ public class RegistrationService {
 
     public Flux<RegistrationResponse> scheduledRefresh(Duration duration) {
         return Flux.interval(duration, duration)
-                .flatMap(i -> authorizedGatewayClient.refresh())
+                .flatMap(i -> gatewayService.refresh())
                 .doOnNext(this::updateRegistrationDetails);
     }
 
     private void updateRegistrationDetails(RegistrationResponse response) {
-        deviceProperties.setId(response.getDeviceId());
+        edgeProperties.getDeviceMetadata().setId(response.getDeviceId());
         registrationDetails.setAuthorized(true);
         registrationDetails.setToken(response.getToken());
         registrationDetails.setExpiration(response.getExpiration());

@@ -1,13 +1,13 @@
 package com.arogut.homex.edge.model;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
 @Builder
-@Getter
+@Value
 public class RegistrationResponse {
 
-    private String deviceId;
-    private String token;
-    private long expiration;
+    String deviceId;
+    String token;
+    long expiration;
 }

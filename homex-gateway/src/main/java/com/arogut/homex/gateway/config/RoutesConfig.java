@@ -11,8 +11,8 @@ public class RoutesConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("devices-message", r -> r.path("/devices/message")
-                        .uri("http://localhost:8082"))
+                .route("devices-message", r -> r.path("/devices/{id}/measurement")
+                        .uri("http://homex-data:8080"))
                 .route("devices-register", r -> r.path("/devices/auth")
                         .uri("no://op"))
                 .build();

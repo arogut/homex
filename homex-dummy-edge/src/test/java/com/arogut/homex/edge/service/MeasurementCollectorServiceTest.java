@@ -1,47 +1,48 @@
 package com.arogut.homex.edge.service;
 
-import com.arogut.homex.edge.config.properties.ContractProperties;
+import com.arogut.homex.edge.config.properties.EdgeProperties;
+import com.arogut.homex.edge.model.Contract;
+import com.arogut.homex.edge.model.DeviceMetadata;
 import com.arogut.homex.edge.model.Measurement;
-import com.arogut.homex.edge.model.MeasurementType;
-import com.arogut.homex.edge.model.NumberMeasurement;
+import com.arogut.homex.edge.model.RegistrationDetails;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class MeasurementCollectorServiceTest {
 
-    private ContractProperties contractProperties = new ContractProperties();
+    private final EdgeProperties edgeProperties = new EdgeProperties(new DeviceMetadata(), new Contract());
+
+    private final RegistrationDetails registrationDetails = new RegistrationDetails();
 
     @Test
     void shouldReturnListOfGeneratedMeasurements() {
-        NumberMeasurement temp = NumberMeasurement.builder()
+        Contract.Measurement temp = Contract.Measurement.builder()
                 .name("temperature")
                 .min(10)
                 .max(15)
                 .build();
-        NumberMeasurement hum = NumberMeasurement.builder()
+        Contract.Measurement hum = Contract.Measurement.builder()
                 .name("humidity")
                 .min(0)
                 .max(100)
                 .build();
-        contractProperties.setMeasurements(Map.of(
-                MeasurementType.DOUBLE, List.of(temp),
-                MeasurementType.INT, List.of(hum)
-        ));
-        MeasurementCollectorService collectorService = new MeasurementCollectorService(contractProperties);
+        edgeProperties.getContract().setMeasurements(Set.of(temp, hum));
+        MeasurementCollectorService collectorService = new MeasurementCollectorService(edgeProperties);
 
-        List<Measurement> measurements = collectorService.getMeasurement();
+        List<Measurement<?>> contractMeasurements = collectorService.getMeasurement();
 
-        Assertions.assertThat(measurements).extracting("name", "min", "max")
+        Assertions.assertThat(contractMeasurements)
+                .extracting("name")
                 .containsExactlyInAnyOrder(
-                        Assertions.tuple(temp.getName(), temp.getMin(), temp.getMax()),
-                        Assertions.tuple(hum.getName(), hum.getMin(), hum.getMax())
+                        temp.getName(),
+                        hum.getName()
                 );
-        Assertions.assertThat(measurements).extracting("value").doesNotContainNull();
+        Assertions.assertThat(contractMeasurements).extracting("value").doesNotContainNull();
     }
 }

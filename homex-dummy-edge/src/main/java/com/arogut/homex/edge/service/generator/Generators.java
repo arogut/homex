@@ -1,6 +1,7 @@
 package com.arogut.homex.edge.service.generator;
 
-import com.arogut.homex.edge.model.NumberMeasurement;
+import com.arogut.homex.edge.model.Contract;
+import com.arogut.homex.edge.model.Measurement;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Random;
@@ -8,7 +9,6 @@ import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public enum Generators implements Supplier<Generators.Generator> {
-    IntGenerator(IntGenerator::new),
     DoubleGenerator(DoubleGenerator::new);
 
     private final Supplier<Generator> factory;
@@ -19,24 +19,19 @@ public enum Generators implements Supplier<Generators.Generator> {
     }
 
     public interface Generator {
-        NumberMeasurement generateValue(NumberMeasurement measurement);
-    }
-
-    static class IntGenerator implements Generator {
-        @Override
-        public NumberMeasurement generateValue(NumberMeasurement measurement) {
-            Random r = new Random();
-            measurement.setValue(r.nextInt((measurement.getMax() - measurement.getMin()) + 1) + measurement.getMin());
-            return measurement;
-        }
+        Measurement<?> generateValue(Contract.Measurement measurement);
     }
 
     static class DoubleGenerator implements Generator {
+
+        Random r = new Random();
+
         @Override
-        public NumberMeasurement generateValue(NumberMeasurement measurement) {
-            Random r = new Random();
-            measurement.setValue(measurement.getMin() + (measurement.getMax() - measurement.getMin()) * r.nextDouble());
-            return measurement;
+        public Measurement<?> generateValue(Contract.Measurement measurement) {
+            return Measurement.builder()
+                    .name(measurement.getName())
+                    .value(measurement.getMin() + (measurement.getMax() - measurement.getMin()) * r.nextDouble())
+                    .build();
         }
     }
 }
