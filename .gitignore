@@ -1,0 +1,9 @@
+.idea/
+*.iml
+
+# Container data
+/docker/grafana/data/
+/docker/influxdb/data/
+/docker/chronograf/data/
+/docker/postgres/data/
+/docker/pgadmin/
