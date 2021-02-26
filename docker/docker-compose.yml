@@ -7,6 +7,7 @@ services:
       - "8080:8080"
     depends_on:
       - influxdb
+      - postgres
   homex-gateway:
     image: arogut/homex-gateway:latest
     container_name: homex-gateway
@@ -22,7 +23,6 @@ services:
       - "8086:8086"
       - "8090:8090"
     volumes:
-      # Data persistency
       - ./influxdb/data:/var/lib/influxdb
   chronograf:
     image: chronograf:latest
@@ -44,6 +44,16 @@ services:
     depends_on:
       - influxdb
     volumes:
-      # Data persistency
       - ./grafana/data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=test
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
